@@ -26,6 +26,8 @@ let G = {
     selected: null,
 };
 
+let lastMouseX = 0, lastMouseY = 0;
+
 // ── SVG setup ────────────────────────────────────────────────────────────────
 
 const resp = await fetch('Risk_board.svg');
@@ -91,6 +93,24 @@ for (let n = 2; n <= 6; n++) {
 }
 
 $('end-btn').addEventListener('click', onEndPhase);
+
+// Load soldier SVG
+const soldierSrc = await fetch('soldier.svg').then(r => r.text());
+const soldierDoc = new DOMParser().parseFromString(soldierSrc, 'text/xml');
+const soldierPath = soldierDoc.querySelector('path');
+const soldierSvg = $('soldier-svg');
+if (soldierPath) {
+    const g = document.createElementNS(SVG_NS, 'g');
+    g.appendChild(soldierPath.cloneNode(true));
+    const origG = soldierDoc.querySelector('g[fill]');
+    if (origG) {
+        const trans = origG.getAttribute('transform');
+        if (trans) g.setAttribute('transform', trans);
+    }
+    soldierSvg.appendChild(g);
+}
+
+document.addEventListener('mousemove', onMouseMove);
 
 // ── Game logic ────────────────────────────────────────────────────────────────
 
@@ -171,6 +191,31 @@ function calcReinforcements() {
 
 // ── Click handling ────────────────────────────────────────────────────────────
 
+function updateCursorOverlay(x, y) {
+    if (G.phase !== 'reinforce' || G.armiesToPlace <= 0) {
+        $('cursor-overlay').style.display = 'none';
+        return;
+    }
+    const overlay = $('cursor-overlay');
+    overlay.style.display = 'flex';
+    overlay.style.left = (x + 12) + 'px';
+    overlay.style.top = (y + 12) + 'px';
+
+    const soldierSvg = $('soldier-svg');
+    if (soldierSvg && G.players[G.turn]) {
+        const g = soldierSvg.querySelector('g');
+        if (g) g.setAttribute('fill', G.players[G.turn].color);
+    }
+    $('army-number').textContent = G.armiesToPlace;
+    $('army-number').style.color = G.players[G.turn].color;
+}
+
+function onMouseMove(e) {
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    updateCursorOverlay(e.clientX, e.clientY);
+}
+
 function onMapClick(e) {
     if (!G.phase || G.phase === 'gameover') return;
     let el = e.target;
@@ -190,6 +235,7 @@ function onTerritoryClick(id) {
         G.armiesToPlace--;
         renderLabel(id);
         updateHeader();
+        updateCursorOverlay(lastMouseX, lastMouseY);
         if (G.armiesToPlace === 0) setTimeout(() => setPhase('attack'), 250);
         return;
     }

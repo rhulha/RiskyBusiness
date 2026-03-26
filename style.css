@@ -164,3 +164,24 @@ html, body {
 #win-box h2 { font-size: 14px; color: #aaa; letter-spacing: 3px; margin-bottom: 8px; }
 #win-box h1 { font-size: 42px; font-weight: bold; }
 #win-box p { color: #aaa; margin-top: 10px; font-size: 14px; }
+
+/* Cursor overlay */
+#cursor-overlay {
+    position: fixed;
+    pointer-events: none;
+    z-index: 80;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+}
+#soldier-svg {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    flex-shrink: 0;
+}
+#army-number {
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
