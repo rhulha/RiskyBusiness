@@ -3,91 +3,13 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const COUNTRIES = [
-    'alaska','northwest_territory','greenland','alberta','ontario','quebec',
-    'western_united_states','eastern_united_states','central_america',
-    'venezuela','peru','brazil','argentina',
-    'iceland','great_britain','western_europe','northern_europe',
-    'scandinavia','ukraine','southern_europe',
-    'north_africa','egypt','east_africa','congo','south_africa','madagascar',
-    'ural','siberia','yakursk','irkutsk','kamchatka',
-    'afghanistan','middle_east','india','siam','china','mongolia','japan',
-    'indonesia','new_guinea','western_australia','eastern_australia',
-];
-
+const COUNTRIES = await fetch('countries.json').then(r => r.json());
 const COUNTRY_SET = new Set(COUNTRIES);
 
-const DISPLAY = {
-    alaska:'Alaska', northwest_territory:'NW Territory', greenland:'Greenland',
-    alberta:'Alberta', ontario:'Ontario', quebec:'Quebec',
-    western_united_states:'W. USA', eastern_united_states:'E. USA',
-    central_america:'C. America', venezuela:'Venezuela', peru:'Peru',
-    brazil:'Brazil', argentina:'Argentina', iceland:'Iceland',
-    great_britain:'Gt. Britain', western_europe:'W. Europe',
-    northern_europe:'N. Europe', scandinavia:'Scandinavia',
-    ukraine:'Ukraine', southern_europe:'S. Europe',
-    north_africa:'N. Africa', egypt:'Egypt', east_africa:'E. Africa',
-    congo:'Congo', south_africa:'S. Africa', madagascar:'Madagascar',
-    ural:'Ural', siberia:'Siberia', yakursk:'Yakutsk', irkutsk:'Irkutsk',
-    kamchatka:'Kamchatka', afghanistan:'Afghanistan', middle_east:'Middle East',
-    india:'India', siam:'Siam', china:'China', mongolia:'Mongolia', japan:'Japan',
-    indonesia:'Indonesia', new_guinea:'New Guinea',
-    western_australia:'W. Australia', eastern_australia:'E. Australia',
-};
+const DISPLAY = await fetch('display.json').then(r => r.json());
 
-const ADJ = {
-    alaska:               ['northwest_territory','alberta','kamchatka'],
-    northwest_territory:  ['alaska','alberta','ontario','greenland'],
-    greenland:            ['northwest_territory','ontario','quebec','iceland'],
-    alberta:              ['alaska','northwest_territory','ontario','western_united_states'],
-    ontario:              ['northwest_territory','alberta','western_united_states','eastern_united_states','quebec','greenland'],
-    quebec:               ['ontario','eastern_united_states','greenland'],
-    western_united_states:['alberta','ontario','eastern_united_states','central_america'],
-    eastern_united_states:['western_united_states','ontario','quebec','central_america'],
-    central_america:      ['western_united_states','eastern_united_states','venezuela'],
-    venezuela:            ['central_america','peru','brazil'],
-    peru:                 ['venezuela','brazil','argentina'],
-    brazil:               ['venezuela','peru','argentina','north_africa'],
-    argentina:            ['peru','brazil'],
-    iceland:              ['greenland','great_britain','scandinavia'],
-    great_britain:        ['iceland','western_europe','northern_europe','scandinavia'],
-    western_europe:       ['great_britain','northern_europe','southern_europe','north_africa'],
-    northern_europe:      ['great_britain','scandinavia','ukraine','western_europe','southern_europe'],
-    scandinavia:          ['iceland','great_britain','northern_europe','ukraine'],
-    ukraine:              ['scandinavia','northern_europe','southern_europe','ural','afghanistan','middle_east'],
-    southern_europe:      ['western_europe','northern_europe','ukraine','middle_east','egypt','north_africa'],
-    north_africa:         ['western_europe','southern_europe','egypt','east_africa','congo','brazil'],
-    egypt:                ['southern_europe','middle_east','east_africa','north_africa'],
-    east_africa:          ['egypt','middle_east','north_africa','congo','south_africa','madagascar'],
-    congo:                ['north_africa','east_africa','south_africa'],
-    south_africa:         ['congo','east_africa','madagascar'],
-    madagascar:           ['south_africa','east_africa'],
-    ural:                 ['ukraine','afghanistan','siberia','china'],
-    siberia:              ['ural','china','mongolia','irkutsk','yakursk'],
-    yakursk:              ['siberia','irkutsk','kamchatka'],
-    irkutsk:              ['siberia','yakursk','kamchatka','mongolia'],
-    kamchatka:            ['yakursk','irkutsk','mongolia','japan','alaska'],
-    afghanistan:          ['ukraine','ural','china','india','middle_east'],
-    middle_east:          ['ukraine','southern_europe','egypt','east_africa','afghanistan','india'],
-    india:                ['afghanistan','middle_east','china','siam'],
-    siam:                 ['india','china','indonesia'],
-    china:                ['ural','afghanistan','india','siam','mongolia','siberia'],
-    mongolia:             ['china','siberia','irkutsk','kamchatka','japan'],
-    japan:                ['mongolia','kamchatka'],
-    indonesia:            ['siam','new_guinea','western_australia'],
-    new_guinea:           ['indonesia','western_australia','eastern_australia'],
-    western_australia:    ['indonesia','new_guinea','eastern_australia'],
-    eastern_australia:    ['new_guinea','western_australia'],
-};
-
-const CONTINENTS = [
-    { name:'North America', territories:['alaska','northwest_territory','greenland','alberta','ontario','quebec','western_united_states','eastern_united_states','central_america'], bonus:5 },
-    { name:'South America', territories:['venezuela','peru','brazil','argentina'], bonus:2 },
-    { name:'Europe',        territories:['iceland','great_britain','western_europe','northern_europe','scandinavia','ukraine','southern_europe'], bonus:5 },
-    { name:'Africa',        territories:['north_africa','egypt','east_africa','congo','south_africa','madagascar'], bonus:3 },
-    { name:'Asia',          territories:['ural','siberia','yakursk','irkutsk','kamchatka','afghanistan','middle_east','india','siam','china','mongolia','japan'], bonus:7 },
-    { name:'Australia',     territories:['indonesia','new_guinea','western_australia','eastern_australia'], bonus:2 },
-];
+const ADJ = await fetch('adjacency.json').then(r => r.json());
+const CONTINENTS = await fetch('continents.json').then(r => r.json());
 
 const PLAYER_COLORS = ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#e67e22'];
 const INIT_ARMIES   = {2:40, 3:35, 4:30, 5:25, 6:20};
