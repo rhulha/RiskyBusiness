@@ -1,0 +1,33 @@
+RISK - Player Turn Steps
+========================
+
+1. REINFORCE
+   - Count territories owned: floor(territories / 3), minimum 3
+   - Add continent bonuses for any continent you fully control:
+       North America  +5
+       South America  +2
+       Europe         +5
+       Africa         +3
+       Asia           +7
+       Australia      +2
+   - Place all earned armies on your own territories (one at a time)
+
+2. ATTACK  (optional, repeat as many times as you like)
+   - Choose one of your territories with 2+ armies as the attacker
+   - Choose an adjacent enemy territory as the target
+   - Roll dice:
+       Attacker rolls up to 3 dice (max = attacking armies - 1)
+       Defender rolls up to 2 dice (max = defending armies)
+   - Compare highest dice pairs; lower value loses 1 army (ties go to defender)
+   - If defender reaches 0 armies: territory is captured
+       Move at least as many armies as dice you rolled into the new territory
+   - Continue attacking or stop at any time
+
+3. FORTIFY  (once per turn, optional)
+   - Move any number of armies (leaving at least 1 behind) from one of your
+     territories to one connected friendly territory
+   - Connection can be through any chain of territories you own
+   - Skip if you don't want to move armies
+
+4. END TURN
+   - Pass to the next player
