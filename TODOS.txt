@@ -1,0 +1,7 @@
+add login so we can have MMR and leaderboard
+and punish leavers
+
+also add networking and match making so we can play against other people online
+
+
+
