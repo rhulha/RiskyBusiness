@@ -185,3 +185,44 @@ html, body {
     line-height: 1;
     text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
+
+/* Combat log */
+#combat-log {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    max-width: 320px;
+    max-height: 300px;
+    overflow-y: auto;
+    background: rgba(22, 33, 62, 0.88);
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    z-index: 70;
+}
+#combat-log::-webkit-scrollbar {
+    width: 6px;
+}
+#combat-log::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+}
+#combat-log::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 3px;
+}
+#combat-log::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
+.log-entry {
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.log-entry:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}

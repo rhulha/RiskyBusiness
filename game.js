@@ -351,27 +351,34 @@ function rollDice(n) {
 }
 
 function showDice(fromId, toId, defOwner, aRolls, dRolls, aLoss, dLoss, captured) {
-    $('dice-title').textContent = `${DISPLAY[fromId]}  →  ${DISPLAY[toId]}`;
-    $('atk-name').style.color = G.players[G.turn].color;
-    $('def-name').style.color = G.players[defOwner].color;
-    $('atk-name').textContent = G.players[G.turn].name;
-    $('def-name').textContent = G.players[defOwner].name;
-    $('atk-dice').textContent = aRolls.map(d => DIE_FACES[d-1]).join(' ');
-    $('def-dice').textContent = dRolls.map(d => DIE_FACES[d-1]).join(' ');
+    const log = $('combat-log');
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+
+    const atkColor = G.players[G.turn].color;
+    const defColor = G.players[defOwner].color;
+    const atkDiceStr = aRolls.map(d => DIE_FACES[d-1]).join(' ');
+    const defDiceStr = dRolls.map(d => DIE_FACES[d-1]).join(' ');
+
+    let html = `<span style="color: ${atkColor}; font-weight: bold;">${DISPLAY[fromId]}</span> `;
+    html += `→ <span style="color: ${defColor}; font-weight: bold;">${DISPLAY[toId]}</span><br>`;
+    html += `Att: ${atkDiceStr} vs Def: ${defDiceStr}<br>`;
 
     if (captured) {
-        $('dice-result').style.color = '#2ecc71';
-        $('dice-result').textContent = '⚔ Territory captured!';
+        html += `<span style="color: #2ecc71; font-weight: bold;">⚔ Territory captured!</span>`;
     } else {
         const parts = [];
         if (aLoss) parts.push(`Attacker −${aLoss}`);
         if (dLoss) parts.push(`Defender −${dLoss}`);
-        $('dice-result').style.color = '#eee';
-        $('dice-result').textContent = parts.join('  ·  ');
+        html += parts.join(' · ');
     }
 
-    $('dice-overlay').style.display = 'flex';
-    setTimeout(() => { $('dice-overlay').style.display = 'none'; }, 1800);
+    entry.innerHTML = html;
+    log.insertBefore(entry, log.firstChild);
+
+    while (log.children.length > 8) {
+        log.removeChild(log.lastChild);
+    }
 }
 
 // ── Fortify ───────────────────────────────────────────────────────────────────
