@@ -34,7 +34,6 @@ html, body {
 #action-hint {
     font-size: 13px;
     color: #aaa;
-    flex: 1;
 }
 #armies-badge {
     font-size: 22px;
@@ -53,7 +52,9 @@ html, body {
     color: #aaa;
     display: flex;
     gap: 8px;
-    margin-left: auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 #trade-btn {
     padding: 7px 14px;
@@ -64,6 +65,7 @@ html, body {
     border-radius: 4px;
     font-size: 13px;
     white-space: nowrap;
+    margin-left: auto;
 }
 #trade-btn:hover { background: #9b59b6; }
 #trade-btn.forced-trade {
