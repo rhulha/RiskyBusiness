@@ -45,6 +45,28 @@ export function updateHeader() {
     }
 }
 
+export function updateCardUI() {
+    const cardsBadge = $('cards-badge');
+    const tradeBtn = $('trade-btn');
+    const playerCards = G.cards[G.turn];
+
+    cardsBadge.textContent = playerCards.length > 0 ? `🃏 ${playerCards.length}` : '';
+
+    if (!tradeBtn) return;
+
+    if (G.phase === 'reinforce') {
+        const count = {infantry: 0, cavalry: 0, artillery: 0};
+        for (const card of playerCards) count[card]++;
+        const hasSet = (count.infantry >= 3 || count.cavalry >= 3 || count.artillery >= 3 ||
+                       (count.infantry && count.cavalry && count.artillery));
+        tradeBtn.style.display = hasSet ? 'block' : 'none';
+        if (playerCards.length >= 5) tradeBtn.classList.add('forced-trade');
+        else tradeBtn.classList.remove('forced-trade');
+    } else {
+        tradeBtn.style.display = 'none';
+    }
+}
+
 export function updateCursorOverlay(x, y) {
     if (G.phase !== 'reinforce' || G.armiesToPlace <= 0) {
         $('cursor-overlay').style.display = 'none';

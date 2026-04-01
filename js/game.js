@@ -1,7 +1,7 @@
 import { G, PLAYER_COLORS, INIT_ARMIES } from './state.js';
 import { COUNTRIES, COUNTRY_SET, ADJ, CONTINENTS } from './data.js';
 import { svg, renderAll, renderLabel } from './map.js';
-import { updateHeader, updateCursorOverlay } from './ui.js';
+import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
 import { resolveBattle, doFortify, getConnectedOwn, connectedOwn } from './combat.js';
 
 const $ = id => document.getElementById(id);
@@ -20,6 +20,13 @@ for (let n = 2; n <= 6; n++) {
 }
 
 $('end-btn').addEventListener('click', onEndPhase);
+$('trade-btn')?.addEventListener('click', () => {
+    if (tradeCards()) {
+        if (G.cards[G.turn].length < 5 && !findValidCardSet(G.cards[G.turn])) {
+            updateCardUI();
+        }
+    }
+});
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
 
@@ -52,6 +59,10 @@ function startGame(numPlayers) {
         }
     }
 
+    G.cards = Array.from({length: numPlayers}, () => []);
+    G.conqueredThisTurn = false;
+    G.cardTradeCount = 0;
+
     G.turn = 0;
     renderAll();
     setPhase('reinforce');
@@ -65,6 +76,12 @@ function setPhase(phase) {
         G.armiesToPlace = calcReinforcements();
         $('end-btn').disabled = true;
         $('end-btn').textContent = 'End Phase';
+
+        while (G.cards[G.turn].length >= 5 && findValidCardSet(G.cards[G.turn])) {
+            tradeCards();
+        }
+
+        updateCardUI();
     } else if (phase === 'attack') {
         $('end-btn').disabled = false;
         $('end-btn').textContent = 'End Attack';
@@ -81,6 +98,13 @@ function onEndPhase() {
 }
 
 function advanceTurn() {
+    if (G.conqueredThisTurn) {
+        const cardTypes = ['infantry', 'cavalry', 'artillery'];
+        const card = cardTypes[Math.floor(Math.random() * 3)];
+        G.cards[G.turn].push(card);
+        G.conqueredThisTurn = false;
+    }
+
     let next = (G.turn + 1) % G.players.length;
     let guard = 0;
     while (!COUNTRIES.some(id => G.territories[id].owner === next)) {
@@ -98,6 +122,44 @@ function calcReinforcements() {
         if (c.territories.every(id => G.territories[id].owner === G.turn)) n += c.bonus;
     }
     return n;
+}
+
+function findValidCardSet(cards) {
+    const count = {infantry: 0, cavalry: 0, artillery: 0};
+    for (const card of cards) count[card]++;
+
+    if (count.infantry >= 3) return ['infantry', 'infantry', 'infantry'];
+    if (count.cavalry >= 3) return ['cavalry', 'cavalry', 'cavalry'];
+    if (count.artillery >= 3) return ['artillery', 'artillery', 'artillery'];
+    if (count.infantry && count.cavalry && count.artillery) {
+        return ['infantry', 'cavalry', 'artillery'];
+    }
+    return null;
+}
+
+function getCardTradeValue(tradeIndex) {
+    const schedule = [4, 6, 8, 10, 12, 15];
+    if (tradeIndex < schedule.length) return schedule[tradeIndex];
+    return 20 + (tradeIndex - 5) * 5;
+}
+
+function tradeCards() {
+    const playerCards = G.cards[G.turn];
+    const set = findValidCardSet(playerCards);
+    if (!set) return false;
+
+    for (const card of set) {
+        const idx = playerCards.indexOf(card);
+        if (idx >= 0) playerCards.splice(idx, 1);
+    }
+
+    const bonus = getCardTradeValue(G.cardTradeCount);
+    G.armiesToPlace += bonus;
+    G.cardTradeCount++;
+
+    updateHeader();
+    updateCardUI();
+    return true;
 }
 
 function checkWin() {

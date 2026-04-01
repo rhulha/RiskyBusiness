@@ -11,5 +11,8 @@ export const G = {
     territories: {},    // id -> {owner, armies}
     armiesToPlace: 0,
     selected: null,
+    cards: [],          // per player: [['infantry','cavalry',...], ...]
+    conqueredThisTurn: false,
+    cardTradeCount: 0,  // increments per trade
 };
 

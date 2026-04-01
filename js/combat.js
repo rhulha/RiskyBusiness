@@ -31,6 +31,7 @@ export function resolveBattle(fromId, toId) {
         def.armies  = moving;
         atk.armies -= moving;
         if (atk.armies < 1) atk.armies = 1;
+        G.conqueredThisTurn = true;
     }
 
     logCombat(fromId, toId, defOwnerBefore, aRolls, dRolls, aLoss, dLoss, captured);
