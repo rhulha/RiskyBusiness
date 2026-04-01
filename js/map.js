@@ -68,9 +68,25 @@ export function renderTerritory(id) {
     lbl.textContent = t.armies;
 }
 
+const highlightTimeouts = {};
+
 export function renderLabel(id) {
     const lbl = svg.getElementById(`lbl-${id}`);
     if (lbl) lbl.textContent = G.territories[id].armies;
+}
+
+export function highlightLabel(id) {
+    const lbl = svg.getElementById(`lbl-${id}`);
+    if (!lbl) return;
+
+    if (highlightTimeouts[id]) clearTimeout(highlightTimeouts[id]);
+
+    lbl.classList.add('reinforced');
+
+    highlightTimeouts[id] = setTimeout(() => {
+        lbl.classList.remove('reinforced');
+        delete highlightTimeouts[id];
+    }, 10000);
 }
 
 export function hexAlpha(hex, alpha) {

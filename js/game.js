@@ -1,6 +1,6 @@
 import { G, PLAYER_COLORS, INIT_ARMIES } from './state.js';
 import { COUNTRIES, COUNTRY_SET, ADJ, CONTINENTS } from './data.js';
-import { svg, renderAll, renderLabel } from './map.js';
+import { svg, renderAll, renderLabel, highlightLabel } from './map.js';
 import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
 import { resolveBattle, doFortify, getConnectedOwn, connectedOwn } from './combat.js';
 import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
@@ -137,6 +137,7 @@ function startGame(numPlayers, aiFlags = []) {
     initAI({
         setPhase,
         renderLabel,
+        highlightLabel,
         updateHeader,
         resolveBattle,
         renderAll,
@@ -294,6 +295,7 @@ function onTerritoryClick(id) {
         G.armiesToPlace--;
         playSound('dip-sound');
         renderLabel(id);
+        highlightLabel(id);
         updateHeader();
         updateCursorOverlay(lastMouseX, lastMouseY);
         if (G.armiesToPlace === 0) setTimeout(() => setPhase('attack'), 250);

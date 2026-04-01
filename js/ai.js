@@ -26,6 +26,7 @@ export function aiPlaceArmy() {
     G.armiesToPlace--;
     gameCtx.playSound('dip-sound');
     gameCtx.renderLabel(target);
+    gameCtx.highlightLabel(target);
     gameCtx.updateHeader();
 
     setTimeout(aiPlaceArmy, 200);
