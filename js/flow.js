@@ -83,6 +83,7 @@ export function setPhase(phase) {
     G.phase = phase;
     setSelectedFn(null);
 
+    const tradeBtn = $('trade-btn');
     if (phase === 'reinforce') {
         G.armiesToPlace = calcReinforcements();
         $('end-btn').disabled = true;
@@ -92,13 +93,16 @@ export function setPhase(phase) {
             tradeCards();
         }
 
+        if (tradeBtn) tradeBtn.disabled = false;
         updateCardUI();
     } else if (phase === 'attack') {
         $('end-btn').disabled = false;
         $('end-btn').textContent = 'End Attack';
+        if (tradeBtn) tradeBtn.disabled = true;
     } else if (phase === 'fortify') {
         $('end-btn').disabled = false;
         $('end-btn').textContent = 'Skip Fortify';
+        if (tradeBtn) tradeBtn.disabled = true;
     }
     updateHeader();
 

@@ -141,6 +141,7 @@ svg text.reinforced {
 
 .attack-arrow-glow {
     fill: none;
+    stroke: #ff4444;
     stroke-width: 14;
     stroke-linecap: round;
     opacity: 0.32;
@@ -150,6 +151,7 @@ svg text.reinforced {
 
 .attack-arrow {
     fill: none;
+    stroke: #ff4444;
     stroke-width: 8;
     stroke-linecap: round;
     stroke-linejoin: round;
