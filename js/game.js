@@ -40,6 +40,12 @@ initInput({
 // Setup remaining event listeners
 ga('end-btn', 'click', onEndPhase);
 
+ga('win-banner', 'click', (e) => {
+    if (e.target.id === 'win-banner') {
+        $('win-banner').style.display = 'none';
+    }
+});
+
 $('trade-btn')?.addEventListener('click', () => {
     if (tradeCards()) {
         if (G.cards[G.turn].length < 5 && !findValidCardSet(G.cards[G.turn])) {
