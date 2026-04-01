@@ -3,6 +3,7 @@ import { COUNTRIES, ADJ } from './data.js';
 import { moveArmiesAfterCapture } from './combat.js';
 
 let gameCtx = {};
+const AI_ATTACK_ARROW_DELAY_MS = 140;
 
 export function initAI(context) {
     gameCtx = context;
@@ -61,20 +62,32 @@ export function aiAttack() {
     }
 
     gameCtx.showAttackArrow?.(bestAttacker, bestTarget, G.players[G.turn]?.color);
-    const result = gameCtx.resolveBattle(bestAttacker, bestTarget);
-    gameCtx.renderAll();
 
-    if (result.captured) {
-        gameCtx.playSound('boom-sound');
-        const minArmies = Math.max(1, result.atkDice - result.aLoss);
-        const maxArmies = G.territories[bestAttacker].armies;
-        const movingArmies = maxArmies > minArmies ? maxArmies - 1 : minArmies;
-        moveArmiesAfterCapture(bestAttacker, bestTarget, movingArmies);
+    setTimeout(() => {
+        if (G.phase !== 'attack') return;
+
+        const attacker = G.territories[bestAttacker];
+        const target = G.territories[bestTarget];
+        if (!attacker || !target || attacker.owner !== G.turn || target.owner === G.turn || attacker.armies < 2) {
+            setTimeout(aiAttack, 300);
+            return;
+        }
+
+        const result = gameCtx.resolveBattle(bestAttacker, bestTarget);
         gameCtx.renderAll();
-        if (gameCtx.checkWin()) return;
-    }
 
-    setTimeout(aiAttack, 500);
+        if (result.captured) {
+            gameCtx.playSound('boom-sound');
+            const minArmies = Math.max(1, result.atkDice - result.aLoss);
+            const maxArmies = G.territories[bestAttacker].armies;
+            const movingArmies = maxArmies > minArmies ? maxArmies - 1 : minArmies;
+            moveArmiesAfterCapture(bestAttacker, bestTarget, movingArmies);
+            gameCtx.renderAll();
+            if (gameCtx.checkWin()) return;
+        }
+
+        setTimeout(aiAttack, 500);
+    }, AI_ATTACK_ARROW_DELAY_MS);
 }
 
 export function aiFortify() {
