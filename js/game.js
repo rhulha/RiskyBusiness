@@ -27,7 +27,7 @@ function onEndPhase() {
 // Initialize all modules
 initSetup(startGame);
 initFlow(setSelected, checkWin, getConnectedOwn);
-initDialogs(checkWin, advanceTurn);
+initDialogs(checkWin, advanceTurn, setSelected);
 initInput({
     playSound,
     renderLabel,

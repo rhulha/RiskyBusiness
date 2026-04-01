@@ -7,10 +7,12 @@ const ga = (el, n, cb) => $(el).addEventListener(n, cb);
 
 let checkWinFn = null;
 let advanceTurnFn = null;
+let setSelectedFn = null;
 
-export function initDialogs(checkWin, advanceTurn) {
+export function initDialogs(checkWin, advanceTurn, setSelected) {
     checkWinFn = checkWin;
     advanceTurnFn = advanceTurn;
+    setSelectedFn = setSelected;
 
     ga('army-slider', 'input', (e) => {
         $('army-value').textContent = e.target.value;
@@ -63,6 +65,8 @@ export function confirmCapture() {
     $('capture-overlay').style.display = 'none';
 
     if (checkWinFn()) return;
+
+    setSelectedFn(toId);
 }
 
 export function showFortifyDialog(fromId, toId, maxArmies) {
