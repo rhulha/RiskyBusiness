@@ -7,6 +7,7 @@ import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
 import { initCards, findValidCardSet, tradeCards } from './cards.js';
 
 const $ = id => document.getElementById(id);
+const ga = (el, n, cb) => $(el).addEventListener(n, cb);
 
 let lastMouseX = 0, lastMouseY = 0;
 
@@ -29,7 +30,7 @@ for (let n = 2; n <= 6; n++) {
     $('player-btns').appendChild(btn);
 }
 
-$('end-btn').addEventListener('click', onEndPhase);
+ga('end-btn', 'click', onEndPhase);
 $('trade-btn')?.addEventListener('click', () => {
     if (tradeCards()) {
         if (G.cards[G.turn].length < 5 && !findValidCardSet(G.cards[G.turn])) {
@@ -37,20 +38,26 @@ $('trade-btn')?.addEventListener('click', () => {
         }
     }
 });
-$('army-slider').addEventListener('input', (e) => {
+ga('army-slider', 'input', (e) => {
     $('army-value').textContent = e.target.value;
 });
-$('army-slider').addEventListener('keydown', (e) => {
+ga('army-slider', 'keydown', (e) => {
     if (e.key === 'Enter') confirmCapture();
 });
-$('capture-confirm-btn').addEventListener('click', confirmCapture);
-$('fortify-slider').addEventListener('input', (e) => {
+ga('capture-confirm-btn', 'click', confirmCapture);
+ga('capture-overlay', 'click', (e) => {
+    if (e.target.id === 'capture-overlay') confirmCapture();
+});
+ga('fortify-slider', 'input', (e) => {
     $('fortify-value').textContent = e.target.value;
 });
-$('fortify-slider').addEventListener('keydown', (e) => {
+ga('fortify-slider', 'keydown', (e) => {
     if (e.key === 'Enter') confirmFortify();
 });
-$('fortify-confirm-btn').addEventListener('click', confirmFortify);
+ga('fortify-confirm-btn', 'click', confirmFortify);
+ga('fortify-overlay', 'click', (e) => {
+    if (e.target.id === 'fortify-overlay') confirmFortify();
+});
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
 
