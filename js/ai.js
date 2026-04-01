@@ -1,5 +1,6 @@
 import { G } from './state.js';
 import { COUNTRIES, ADJ } from './data.js';
+import { moveArmiesAfterCapture } from './combat.js';
 
 let gameCtx = {};
 
@@ -64,6 +65,11 @@ export function aiAttack() {
 
     if (result.captured) {
         gameCtx.playSound('boom-sound');
+        const minArmies = Math.max(1, result.atkDice - result.aLoss);
+        const maxArmies = G.territories[bestAttacker].armies;
+        const movingArmies = maxArmies > minArmies ? maxArmies - 1 : minArmies;
+        moveArmiesAfterCapture(bestAttacker, bestTarget, movingArmies);
+        gameCtx.renderAll();
         if (gameCtx.checkWin()) return;
     }
 

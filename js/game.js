@@ -40,6 +40,9 @@ $('trade-btn')?.addEventListener('click', () => {
 $('army-slider').addEventListener('input', (e) => {
     $('army-value').textContent = e.target.value;
 });
+$('army-slider').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') confirmCapture();
+});
 $('capture-confirm-btn').addEventListener('click', confirmCapture);
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
@@ -243,6 +246,36 @@ function checkWin() {
         return true;
     }
     return false;
+}
+
+function showCaptureDialog(fromId, toId, minArmies, maxArmies) {
+    G.pendingCapture = {fromId, toId, minArmies, maxArmies};
+
+    $('capture-msg').textContent = `Moving armies from ${fromId} to ${toId}`;
+
+    const slider = $('army-slider');
+    slider.min = minArmies;
+    slider.max = maxArmies;
+    slider.value = maxArmies;
+    $('army-value').textContent = maxArmies;
+
+    $('capture-overlay').style.display = 'flex';
+    slider.focus();
+}
+
+function confirmCapture() {
+    if (!G.pendingCapture) return;
+
+    const {fromId, toId} = G.pendingCapture;
+    const movingArmies = parseInt($('army-slider').value);
+
+    moveArmiesAfterCapture(fromId, toId, movingArmies);
+    renderAll();
+
+    G.pendingCapture = null;
+    $('capture-overlay').style.display = 'none';
+
+    if (checkWin()) return;
 }
 
 // ── Selection & Highlights ────────────────────────────────────────────────
