@@ -3,6 +3,7 @@ import { COUNTRIES, COUNTRY_SET, ADJ, CONTINENTS } from './data.js';
 import { svg, renderAll, renderLabel } from './map.js';
 import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
 import { resolveBattle, doFortify, getConnectedOwn, connectedOwn } from './combat.js';
+import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
 
 const $ = id => document.getElementById(id);
 
@@ -15,7 +16,7 @@ for (let n = 2; n <= 6; n++) {
     btn.className = 'pbtn';
     btn.textContent = n;
     btn.style.background = PLAYER_COLORS[n - 2];
-    btn.addEventListener('click', () => startGame(n));
+    btn.addEventListener('click', () => showPlayerConfig(n));
     $('player-btns').appendChild(btn);
 }
 
@@ -30,14 +31,75 @@ $('trade-btn')?.addEventListener('click', () => {
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
 
+// ── Setup & Config ───────────────────────────────────────────────────────
+
+function showPlayerConfig(numPlayers) {
+    $('setup-step1').style.display = 'none';
+    $('setup-step2').style.display = 'block';
+
+    const config = $('player-config');
+    config.innerHTML = '';
+
+    for (let i = 0; i < numPlayers; i++) {
+        const row = document.createElement('div');
+        row.className = 'player-config-row';
+        const humanBtn = document.createElement('button');
+        const aiBtn = document.createElement('button');
+
+        humanBtn.className = 'toggle-btn active';
+        humanBtn.textContent = 'Human';
+        humanBtn.dataset.player = i;
+        humanBtn.dataset.type = 'human';
+
+        aiBtn.className = 'toggle-btn';
+        aiBtn.textContent = 'AI';
+        aiBtn.dataset.player = i;
+        aiBtn.dataset.type = 'ai';
+
+        [humanBtn, aiBtn].forEach(btn => {
+            btn.addEventListener('click', () => {
+                config.querySelectorAll(`.toggle-btn[data-player="${i}"]`).forEach(b =>
+                    b.classList.toggle('active', b === btn)
+                );
+            });
+        });
+
+        const dot = document.createElement('div');
+        dot.className = 'player-config-dot';
+        dot.style.background = PLAYER_COLORS[i];
+
+        const label = document.createElement('span');
+        label.textContent = `Player ${i + 1}`;
+
+        const toggle = document.createElement('div');
+        toggle.className = 'ai-toggle';
+        toggle.appendChild(humanBtn);
+        toggle.appendChild(aiBtn);
+
+        row.appendChild(dot);
+        row.appendChild(label);
+        row.appendChild(toggle);
+        config.appendChild(row);
+    }
+
+    $('start-btn').onclick = () => {
+        const aiFlags = Array.from({length: numPlayers}, (_, i) => {
+            const aiBtn = config.querySelector(`.toggle-btn[data-player="${i}"][data-type="ai"]`);
+            return aiBtn.classList.contains('active');
+        });
+        startGame(numPlayers, aiFlags);
+    };
+}
+
 // ── Game Logic ────────────────────────────────────────────────────────────
 
-function startGame(numPlayers) {
+function startGame(numPlayers, aiFlags = []) {
     $('setup-overlay').style.display = 'none';
 
     G.players = Array.from({length: numPlayers}, (_, i) => ({
         name: `Player ${i + 1}`,
         color: PLAYER_COLORS[i],
+        ai: aiFlags[i] ?? false,
     }));
 
     const shuffled = [...COUNTRIES].sort(() => Math.random() - 0.5);
@@ -62,6 +124,18 @@ function startGame(numPlayers) {
     G.cards = Array.from({length: numPlayers}, () => []);
     G.conqueredThisTurn = false;
     G.cardTradeCount = 0;
+
+    initAI({
+        setPhase,
+        renderLabel,
+        updateHeader,
+        resolveBattle,
+        renderAll,
+        checkWin,
+        doFortify,
+        getConnectedOwn,
+        advanceTurn,
+    });
 
     G.turn = 0;
     renderAll();
@@ -90,6 +164,12 @@ function setPhase(phase) {
         $('end-btn').textContent = 'Skip Fortify';
     }
     updateHeader();
+
+    if (G.players[G.turn]?.ai) {
+        if (phase === 'reinforce') setTimeout(aiPlaceArmy, 600);
+        else if (phase === 'attack') setTimeout(aiAttack, 600);
+        else if (phase === 'fortify') setTimeout(aiFortify, 400);
+    }
 }
 
 function onEndPhase() {
@@ -161,6 +241,7 @@ function tradeCards() {
     updateCardUI();
     return true;
 }
+
 
 function checkWin() {
     if (COUNTRIES.every(id => G.territories[id].owner === G.turn)) {

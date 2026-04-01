@@ -136,7 +136,61 @@ html, body {
     font-size: 48px; letter-spacing: 8px;
     color: #e94560; margin-bottom: 6px;
 }
-#setup-box p { color: #aaa; margin-bottom: 28px; font-size: 15px; }
+#setup-box p { color: #aaa; margin-bottom: 20px; font-size: 15px; }
+#setup-step2 { display: flex; flex-direction: column; gap: 16px; }
+#player-config { display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; }
+.player-config-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+}
+.player-config-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.player-config-row > span {
+    font-size: 14px;
+    min-width: 60px;
+}
+.ai-toggle {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+.toggle-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+    border: 1px solid #555;
+    background: #0f3460;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+}
+.toggle-btn:hover { border-color: #999; }
+.toggle-btn.active {
+    background: #9b59b6;
+    color: #fff;
+    border-color: #9b59b6;
+    font-weight: bold;
+}
+#start-btn {
+    padding: 10px 20px;
+    background: #0f3460;
+    border: 1px solid #9b59b6;
+    color: #eee;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    align-self: center;
+}
+#start-btn:hover { background: #9b59b6; }
 #player-btns { display: flex; gap: 14px; justify-content: center; }
 .pbtn {
     width: 54px; height: 54px;
