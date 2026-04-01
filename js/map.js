@@ -54,7 +54,7 @@ for (const id of COUNTRIES) {
     txt.setAttribute('stroke', 'rgba(0,0,0,0.5)');
     txt.setAttribute('stroke-width', '0.4');
     txt.setAttribute('paint-order', 'stroke');
-    txt.style.pointerEvents = 'none';
+    txt.style.cursor = 'pointer';
     labelG.appendChild(txt);
 }
 

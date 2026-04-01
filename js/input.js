@@ -75,6 +75,13 @@ function onMapClick(e) {
             if (G.phase !== 'reinforce') onTerritoryClick(el.id);
             return;
         }
+        if (el.id?.startsWith('lbl-')) {
+            const countryId = el.id.slice(4);
+            if (COUNTRY_SET.has(countryId)) {
+                if (G.phase !== 'reinforce') onTerritoryClick(countryId);
+                return;
+            }
+        }
         el = el.parentElement;
     }
     if (G.phase === 'attack' || G.phase === 'fortify') setSelected(null);
@@ -84,9 +91,17 @@ function onMapMouseDown(e) {
     if (G.phase !== 'reinforce') return;
     let el = e.target;
     while (el && el !== svg) {
+        let countryId = null;
         if (COUNTRY_SET.has(el.id)) {
-            holdingTerritory = el.id;
-            placeArmy(el.id);
+            countryId = el.id;
+        } else if (el.id?.startsWith('lbl-')) {
+            countryId = el.id.slice(4);
+            if (!COUNTRY_SET.has(countryId)) countryId = null;
+        }
+
+        if (countryId) {
+            holdingTerritory = countryId;
+            placeArmy(countryId);
             holdTimeout = setTimeout(() => {
                 if (holdingTerritory) {
                     holdInterval = setInterval(() => placeArmy(holdingTerritory), 80);
