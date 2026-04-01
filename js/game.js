@@ -4,6 +4,7 @@ import { svg, renderAll, renderLabel } from './map.js';
 import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
 import { resolveBattle, doFortify, getConnectedOwn, connectedOwn } from './combat.js';
 import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
+import { initCards, findValidCardSet, tradeCards } from './cards.js';
 
 const $ = id => document.getElementById(id);
 
@@ -137,6 +138,11 @@ function startGame(numPlayers, aiFlags = []) {
         advanceTurn,
     });
 
+    initCards({
+        updateHeader,
+        updateCardUI,
+    });
+
     G.turn = 0;
     renderAll();
     setPhase('reinforce');
@@ -204,43 +210,6 @@ function calcReinforcements() {
     return n;
 }
 
-function findValidCardSet(cards) {
-    const count = {infantry: 0, cavalry: 0, artillery: 0};
-    for (const card of cards) count[card]++;
-
-    if (count.infantry >= 3) return ['infantry', 'infantry', 'infantry'];
-    if (count.cavalry >= 3) return ['cavalry', 'cavalry', 'cavalry'];
-    if (count.artillery >= 3) return ['artillery', 'artillery', 'artillery'];
-    if (count.infantry && count.cavalry && count.artillery) {
-        return ['infantry', 'cavalry', 'artillery'];
-    }
-    return null;
-}
-
-function getCardTradeValue(tradeIndex) {
-    const schedule = [4, 6, 8, 10, 12, 15];
-    if (tradeIndex < schedule.length) return schedule[tradeIndex];
-    return 20 + (tradeIndex - 5) * 5;
-}
-
-function tradeCards() {
-    const playerCards = G.cards[G.turn];
-    const set = findValidCardSet(playerCards);
-    if (!set) return false;
-
-    for (const card of set) {
-        const idx = playerCards.indexOf(card);
-        if (idx >= 0) playerCards.splice(idx, 1);
-    }
-
-    const bonus = getCardTradeValue(G.cardTradeCount);
-    G.armiesToPlace += bonus;
-    G.cardTradeCount++;
-
-    updateHeader();
-    updateCardUI();
-    return true;
-}
 
 
 function checkWin() {
