@@ -3,11 +3,7 @@ import { DISPLAY, COUNTRIES } from './data.js';
 
 const $ = id => document.getElementById(id);
 
-const basePath = import.meta.url.includes('/RiskyBusiness/')
-    ? '/RiskyBusiness/'
-    : new URL('.', import.meta.url).pathname;
-
-const soldierSrc = await fetch(new URL(`${basePath}images/soldier.svg`, import.meta.url).href).then(r => r.text());
+const soldierSrc = await fetch('../images/soldier.svg').then(r => r.text());
 const soldierDoc = new DOMParser().parseFromString(soldierSrc, 'text/xml');
 const soldierPath = soldierDoc.querySelector('path');
 const soldierSvg = $('soldier-svg');

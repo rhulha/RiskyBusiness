@@ -14,6 +14,7 @@ let showFortifyDialog = null;
 
 let holdingTerritory = null;
 let holdInterval = null;
+let holdTimeout = null;
 
 export function initInput(deps) {
     playSound = deps.playSound;
@@ -85,8 +86,12 @@ function onMapMouseDown(e) {
     while (el && el !== svg) {
         if (COUNTRY_SET.has(el.id)) {
             holdingTerritory = el.id;
-            holdInterval = setInterval(() => placeArmy(holdingTerritory), 80);
             placeArmy(el.id);
+            holdTimeout = setTimeout(() => {
+                if (holdingTerritory) {
+                    holdInterval = setInterval(() => placeArmy(holdingTerritory), 80);
+                }
+            }, 400);
             return;
         }
         el = el.parentElement;
@@ -94,6 +99,10 @@ function onMapMouseDown(e) {
 }
 
 function onMouseUp() {
+    if (holdTimeout) {
+        clearTimeout(holdTimeout);
+        holdTimeout = null;
+    }
     if (holdInterval) {
         clearInterval(holdInterval);
         holdInterval = null;

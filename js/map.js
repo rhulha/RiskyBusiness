@@ -3,11 +3,7 @@ import { G, SVG_NS } from './state.js';
 
 const $ = id => document.getElementById(id);
 
-const basePath = import.meta.url.includes('/RiskyBusiness/')
-    ? '/RiskyBusiness/'
-    : new URL('.', import.meta.url).pathname;
-
-const resp = await fetch(new URL(`${basePath}images/Risk_board.svg`, import.meta.url).href);
+const resp = await fetch('../images/Risk_board.svg');
 $('svgContainer').innerHTML = await resp.text();
 export const svg = $('svgContainer').querySelector('svg');
 const layer4 = svg.getElementById('layer4');
