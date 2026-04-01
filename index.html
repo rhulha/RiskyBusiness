@@ -48,6 +48,19 @@
     </div>
 </div>
 
+<div id="capture-overlay" style="display:none">
+    <div id="capture-box">
+        <h3>Territory Captured!</h3>
+        <p id="capture-msg"></p>
+        <div id="army-slider-container">
+            <label for="army-slider">Armies to move:</label>
+            <input type="range" id="army-slider" min="1" max="6" value="3">
+            <span id="army-value">3</span>
+        </div>
+        <button id="capture-confirm-btn">Confirm</button>
+    </div>
+</div>
+
 <div id="header">
     <div id="player-dot"></div>
     <span id="phase-label"></span>

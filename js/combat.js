@@ -26,11 +26,8 @@ export function resolveBattle(fromId, toId) {
     let captured = false;
     if (def.armies <= 0) {
         captured = true;
-        const moving = Math.max(1, atkDice - aLoss);
-        def.owner   = G.turn;
-        def.armies  = moving;
-        atk.armies -= moving;
-        if (atk.armies < 1) atk.armies = 1;
+        def.owner = G.turn;
+        def.armies = 0;
         G.conqueredThisTurn = true;
     }
 
@@ -38,7 +35,9 @@ export function resolveBattle(fromId, toId) {
 
     return {
         captured,
-        shouldDeselect: atk.armies < 2
+        shouldDeselect: atk.armies < 2,
+        atkDice,
+        aLoss,
     };
 }
 
@@ -71,4 +70,12 @@ export function getConnectedOwn(startId) {
 
 export function connectedOwn(fromId, toId) {
     return getConnectedOwn(fromId).has(toId);
+}
+
+export function moveArmiesAfterCapture(fromId, toId, movingArmies) {
+    const from = G.territories[fromId];
+    const to = G.territories[toId];
+    from.armies -= movingArmies;
+    to.armies = movingArmies;
+    if (from.armies < 1) from.armies = 1;
 }

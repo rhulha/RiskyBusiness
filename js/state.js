@@ -14,5 +14,6 @@ export const G = {
     cards: [],          // per player: [['infantry','cavalry',...], ...]
     conqueredThisTurn: false,
     cardTradeCount: 0,  // increments per trade
+    pendingCapture: null,  // {fromId, toId, minArmies, maxArmies}
 };
 

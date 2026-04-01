@@ -2,7 +2,7 @@ import { G, PLAYER_COLORS, INIT_ARMIES } from './state.js';
 import { COUNTRIES, COUNTRY_SET, ADJ, CONTINENTS } from './data.js';
 import { svg, renderAll, renderLabel, highlightLabel } from './map.js';
 import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
-import { resolveBattle, doFortify, getConnectedOwn, connectedOwn } from './combat.js';
+import { resolveBattle, doFortify, getConnectedOwn, connectedOwn, moveArmiesAfterCapture } from './combat.js';
 import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
 import { initCards, findValidCardSet, tradeCards } from './cards.js';
 
@@ -37,6 +37,10 @@ $('trade-btn')?.addEventListener('click', () => {
         }
     }
 });
+$('army-slider').addEventListener('input', (e) => {
+    $('army-value').textContent = e.target.value;
+});
+$('capture-confirm-btn').addEventListener('click', confirmCapture);
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
 
@@ -55,12 +59,14 @@ function showPlayerConfig(numPlayers) {
         const humanBtn = document.createElement('button');
         const aiBtn = document.createElement('button');
 
-        humanBtn.className = 'toggle-btn active';
+        const defaultIsAI = i > 0;
+
+        humanBtn.className = `toggle-btn${defaultIsAI ? '' : ' active'}`;
         humanBtn.textContent = 'Human';
         humanBtn.dataset.player = i;
         humanBtn.dataset.type = 'human';
 
-        aiBtn.className = 'toggle-btn';
+        aiBtn.className = `toggle-btn${defaultIsAI ? ' active' : ''}`;
         aiBtn.textContent = 'AI';
         aiBtn.dataset.player = i;
         aiBtn.dataset.type = 'ai';
@@ -105,10 +111,14 @@ function showPlayerConfig(numPlayers) {
 function startGame(numPlayers, aiFlags = []) {
     $('setup-overlay').style.display = 'none';
 
+    const resolvedAIFlags = Array.from({length: numPlayers}, (_, i) =>
+        aiFlags[i] ?? (i > 0)
+    );
+
     G.players = Array.from({length: numPlayers}, (_, i) => ({
         name: `Player ${i + 1}`,
         color: PLAYER_COLORS[i],
-        ai: aiFlags[i] ?? false,
+        ai: resolvedAIFlags[i],
     }));
 
     const shuffled = [...COUNTRIES].sort(() => Math.random() - 0.5);
@@ -317,7 +327,9 @@ function onTerritoryClick(id) {
             if (result.captured) {
                 playSound('boom-sound');
                 setSelected(null);
-                if (checkWin()) return;
+                const minArmies = Math.max(1, result.atkDice - result.aLoss);
+                const maxArmies = G.territories[G.selected].armies;
+                showCaptureDialog(G.selected, id, minArmies, maxArmies);
             } else if (result.shouldDeselect) {
                 setSelected(null);
             }
