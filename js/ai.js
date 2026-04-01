@@ -24,6 +24,7 @@ export function aiPlaceArmy() {
 
     G.territories[target].armies++;
     G.armiesToPlace--;
+    gameCtx.playSound('dip-sound');
     gameCtx.renderLabel(target);
     gameCtx.updateHeader();
 
@@ -60,7 +61,10 @@ export function aiAttack() {
     const result = gameCtx.resolveBattle(bestAttacker, bestTarget);
     gameCtx.renderAll();
 
-    if (result.captured && gameCtx.checkWin()) return;
+    if (result.captured) {
+        gameCtx.playSound('boom-sound');
+        if (gameCtx.checkWin()) return;
+    }
 
     setTimeout(aiAttack, 500);
 }

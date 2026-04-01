@@ -10,6 +10,14 @@ const $ = id => document.getElementById(id);
 
 let lastMouseX = 0, lastMouseY = 0;
 
+function playSound(elementId) {
+    const audio = $(elementId);
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+}
+
 // ── UI Setup ──────────────────────────────────────────────────────────────
 
 for (let n = 2; n <= 6; n++) {
@@ -136,6 +144,7 @@ function startGame(numPlayers, aiFlags = []) {
         doFortify,
         getConnectedOwn,
         advanceTurn,
+        playSound,
     });
 
     initCards({
@@ -283,6 +292,7 @@ function onTerritoryClick(id) {
         if (t.owner !== G.turn || G.armiesToPlace <= 0) return;
         t.armies++;
         G.armiesToPlace--;
+        playSound('dip-sound');
         renderLabel(id);
         updateHeader();
         updateCursorOverlay(lastMouseX, lastMouseY);
@@ -303,6 +313,7 @@ function onTerritoryClick(id) {
             const result = resolveBattle(G.selected, id);
             renderAll();
             if (result.captured) {
+                playSound('boom-sound');
                 setSelected(null);
                 if (checkWin()) return;
             } else if (result.shouldDeselect) {
