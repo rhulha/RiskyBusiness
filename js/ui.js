@@ -1,5 +1,5 @@
 import { G, PLAYER_COLORS, DIE_FACES, SVG_NS } from './state.js';
-import { DISPLAY } from './data.js';
+import { DISPLAY, COUNTRIES } from './data.js';
 
 const $ = id => document.getElementById(id);
 
@@ -43,6 +43,21 @@ export function updateHeader() {
             ? `Moving from ${DISPLAY[G.selected]} — click a blue connected territory`
             : 'Move armies to a connected friendly territory (optional)';
     }
+
+    updatePlayerStatus();
+}
+
+function updatePlayerStatus() {
+    const statusEl = $('player-status');
+    const countryCounts = Array(G.players.length).fill(0);
+    COUNTRIES.forEach(id => countryCounts[G.territories[id].owner]++);
+
+    const status = G.players.map((p, i) => {
+        if (countryCounts[i] === 0) return null;
+        return `<span style="color: ${p.color}">● ${countryCounts[i]}</span>`;
+    }).filter(Boolean).join(' ');
+
+    statusEl.innerHTML = status;
 }
 
 export function updateCardUI() {
