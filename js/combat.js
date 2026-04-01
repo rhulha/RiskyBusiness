@@ -42,7 +42,9 @@ export function resolveBattle(fromId, toId) {
 }
 
 export function rollDice(n) {
-    return Array.from({length: n}, () => Math.ceil(Math.random() * 6));
+    const bytes = new Uint8Array(n);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, b => (b % 6) + 1);
 }
 
 export function doFortify(fromId, toId) {
