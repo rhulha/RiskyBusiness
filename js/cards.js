@@ -20,6 +20,8 @@ export function findValidCardSet(cards) {
 }
 
 export function getCardTradeValue(tradeIndex) {
+    if (G.cardTradeType === 'constant') return 5;
+
     const schedule = [4, 6, 8, 10, 12, 15];
     if (tradeIndex < schedule.length) return schedule[tradeIndex];
     return 20 + (tradeIndex - 5) * 5;

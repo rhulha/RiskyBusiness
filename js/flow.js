@@ -18,13 +18,14 @@ export function initFlow(setSelected, checkWin, getConnectedOwn) {
     getConnectedOwnFn = getConnectedOwn;
 }
 
-export function startGame(numPlayers, aiFlags = []) {
+export function startGame(numPlayers, aiFlags = [], cardTradeType = 'increasing') {
     $('setup-overlay').style.display = 'none';
 
     const resolvedAIFlags = Array.from({length: numPlayers}, (_, i) =>
         aiFlags[i] ?? (i > 0)
     );
 
+    G.cardTradeType = cardTradeType;
     G.players = Array.from({length: numPlayers}, (_, i) => ({
         name: `Player ${i + 1}`,
         color: PLAYER_COLORS[i],

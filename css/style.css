@@ -191,6 +191,12 @@ svg text.reinforced {
 #setup-box p { color: #aaa; margin-bottom: 20px; font-size: 15px; }
 #setup-step2 { display: flex; flex-direction: column; gap: 16px; }
 #player-config { display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; }
+.setup-section {
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
 .player-config-row {
     display: flex;
     align-items: center;
@@ -229,6 +235,23 @@ svg text.reinforced {
     background: #9b59b6;
     color: #fff;
     border-color: #9b59b6;
+    font-weight: bold;
+}
+.card-option-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: 1px solid #555;
+    background: #0f3460;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+}
+.card-option-btn:hover { border-color: #999; }
+.card-option-btn.active {
+    background: #2ecc71;
+    color: #1a1a2e;
+    border-color: #2ecc71;
     font-weight: bold;
 }
 #start-btn {

@@ -21,6 +21,27 @@ export function showPlayerConfig(numPlayers, startGame) {
     const config = $('player-config');
     config.innerHTML = '';
 
+    const cardSection = document.createElement('div');
+    cardSection.className = 'setup-section';
+    cardSection.innerHTML = `
+        <p style="margin-bottom: 10px; font-size: 13px; color: #aaa;">Card Trading:</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+            <button class="card-option-btn" data-trade-type="increasing" style="flex: 1;">Increasing (4,6,8...)</button>
+            <button class="card-option-btn" data-trade-type="constant" style="flex: 1;">Constant (5 each)</button>
+        </div>
+    `;
+    config.appendChild(cardSection);
+
+    let selectedTradeType = 'increasing';
+    config.querySelectorAll('.card-option-btn').forEach(btn => {
+        if (btn.dataset.tradeType === 'increasing') btn.classList.add('active');
+        btn.addEventListener('click', () => {
+            config.querySelectorAll('.card-option-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedTradeType = btn.dataset.tradeType;
+        });
+    });
+
     for (let i = 0; i < numPlayers; i++) {
         const row = document.createElement('div');
         row.className = 'player-config-row';
@@ -70,6 +91,6 @@ export function showPlayerConfig(numPlayers, startGame) {
             const aiBtn = config.querySelector(`.toggle-btn[data-player="${i}"][data-type="ai"]`);
             return aiBtn.classList.contains('active');
         });
-        startGame(numPlayers, aiFlags);
+        startGame(numPlayers, aiFlags, selectedTradeType);
     };
 }
