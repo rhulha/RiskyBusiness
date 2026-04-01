@@ -15,5 +15,6 @@ export const G = {
     conqueredThisTurn: false,
     cardTradeCount: 0,  // increments per trade
     pendingCapture: null,  // {fromId, toId, minArmies, maxArmies}
+    pendingFortify: null,  // {fromId, toId, maxArmies}
 };
 

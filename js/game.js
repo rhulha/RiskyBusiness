@@ -44,6 +44,13 @@ $('army-slider').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') confirmCapture();
 });
 $('capture-confirm-btn').addEventListener('click', confirmCapture);
+$('fortify-slider').addEventListener('input', (e) => {
+    $('fortify-value').textContent = e.target.value;
+});
+$('fortify-slider').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') confirmFortify();
+});
+$('fortify-confirm-btn').addEventListener('click', confirmFortify);
 svg.addEventListener('click', onMapClick);
 document.addEventListener('mousemove', onMouseMove);
 
@@ -279,6 +286,39 @@ function confirmCapture() {
     if (checkWin()) return;
 }
 
+function showFortifyDialog(fromId, toId, maxArmies) {
+    G.pendingFortify = {fromId, toId, maxArmies};
+
+    $('fortify-msg').textContent = `Moving armies from ${fromId} to ${toId}`;
+
+    const slider = $('fortify-slider');
+    slider.min = 1;
+    slider.max = maxArmies;
+    slider.value = maxArmies;
+    $('fortify-value').textContent = maxArmies;
+
+    $('fortify-overlay').style.display = 'flex';
+    slider.focus();
+}
+
+function confirmFortify() {
+    if (!G.pendingFortify) return;
+
+    const {fromId, toId} = G.pendingFortify;
+    const movingArmies = parseInt($('fortify-slider').value);
+
+    const from = G.territories[fromId];
+    const to = G.territories[toId];
+    from.armies -= movingArmies;
+    to.armies += movingArmies;
+
+    renderAll();
+    G.pendingFortify = null;
+    $('fortify-overlay').style.display = 'none';
+
+    advanceTurn();
+}
+
 // ── Selection & Highlights ────────────────────────────────────────────────
 
 function setSelected(id) {
@@ -367,7 +407,10 @@ function onTerritoryClick(id) {
                 setSelected(null);
                 showCaptureDialog(attackerId, id, minArmies, maxArmies);
             } else if (result.shouldDeselect) {
+                playSound('hit-sound');
                 setSelected(null);
+            } else {
+                playSound('hit-sound');
             }
         }
         return;
@@ -382,10 +425,10 @@ function onTerritoryClick(id) {
         } else if (t.owner !== G.turn) {
             setSelected(null);
         } else if (connectedOwn(G.selected, id)) {
-            doFortify(G.selected, id);
+            const fromId = G.selected;
+            const maxArmies = G.territories[fromId].armies - 1;
             setSelected(null);
-            renderAll();
-            advanceTurn();
+            showFortifyDialog(fromId, id, maxArmies);
         }
         return;
     }

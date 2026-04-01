@@ -84,6 +84,8 @@ export function aiAttack() {
             moveArmiesAfterCapture(bestAttacker, bestTarget, movingArmies);
             gameCtx.renderAll();
             if (gameCtx.checkWin()) return;
+        } else {
+            gameCtx.playSound('hit-sound');
         }
 
         setTimeout(aiAttack, 500);

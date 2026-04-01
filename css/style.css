@@ -331,6 +331,71 @@ svg text.reinforced {
     background: #27ae60;
 }
 
+/* Fortify dialog */
+#fortify-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center; align-items: center;
+    z-index: 150;
+}
+#fortify-box {
+    background: #16213e;
+    border: 2px solid #3498db;
+    border-radius: 10px;
+    padding: 28px 32px;
+    text-align: center;
+    min-width: 320px;
+}
+#fortify-box h3 {
+    font-size: 20px;
+    color: #3498db;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+#fortify-msg {
+    color: #aaa;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+#fortify-slider-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+#fortify-slider-container label {
+    color: #aaa;
+    font-size: 14px;
+    white-space: nowrap;
+}
+#fortify-slider {
+    width: 140px;
+    cursor: pointer;
+}
+#fortify-value {
+    color: #3498db;
+    font-weight: bold;
+    font-size: 18px;
+    min-width: 24px;
+    text-align: center;
+}
+#fortify-confirm-btn {
+    padding: 10px 24px;
+    background: #3498db;
+    border: none;
+    color: #1a1a2e;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+}
+#fortify-confirm-btn:hover {
+    background: #2980b9;
+}
+
 /* Win banner */
 #win-banner {
     display: none;
