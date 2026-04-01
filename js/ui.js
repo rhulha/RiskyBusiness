@@ -98,7 +98,7 @@ export function logCombat(fromId, toId, defOwner, aRolls, dRolls, aLoss, dLoss, 
 
     let html = `<span style="color: ${atkColor}; font-weight: bold;">${DISPLAY[fromId]}</span> `;
     html += `→ <span style="color: ${defColor}; font-weight: bold;">${DISPLAY[toId]}</span><br>`;
-    html += `Att: ${atkDiceStr} vs Def: ${defDiceStr}<br>`;
+    html += `Att: <span class="dice">${atkDiceStr}</span> vs Def: <span class="dice">${defDiceStr}</span><br>`;
 
     if (captured) {
         html += `<span style="color: #2ecc71; font-weight: bold;">⚔ Territory captured!</span>`;
