@@ -65,6 +65,7 @@ html, body {
     border-radius: 4px;
     font-size: 13px;
     white-space: nowrap;
+    margin-left: auto;
 }
 #trade-btn:hover { background: #9b59b6; }
 #trade-btn.forced-trade {
