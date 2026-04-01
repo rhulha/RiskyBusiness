@@ -107,10 +107,10 @@ function ensureAttackArrowMarker() {
     const marker = document.createElementNS(SVG_NS, 'marker');
     marker.id = 'attack-arrow-head';
     marker.setAttribute('viewBox', '0 0 12 12');
-    marker.setAttribute('refX', '10');
-    marker.setAttribute('refY', '6');
-    marker.setAttribute('markerWidth', '12');
-    marker.setAttribute('markerHeight', '12');
+    marker.setAttribute('refX', '5');
+    marker.setAttribute('refY', '3');
+    marker.setAttribute('markerWidth', '6');
+    marker.setAttribute('markerHeight', '6');
     marker.setAttribute('orient', 'auto-start-reverse');
 
     const head = document.createElementNS(SVG_NS, 'path');
