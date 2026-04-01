@@ -21,6 +21,7 @@ export function initDialogs(checkWin, advanceTurn, setSelected) {
         if (e.key === 'Enter') confirmCapture();
     });
     ga('capture-confirm-btn', 'click', confirmCapture);
+    ga('capture-box', 'click', confirmCapture);
     ga('capture-overlay', 'click', (e) => {
         if (e.target.id === 'capture-overlay') confirmCapture();
     });
@@ -32,6 +33,7 @@ export function initDialogs(checkWin, advanceTurn, setSelected) {
         if (e.key === 'Enter') confirmFortify();
     });
     ga('fortify-confirm-btn', 'click', confirmFortify);
+    ga('fortify-box', 'click', confirmFortify);
     ga('fortify-overlay', 'click', (e) => {
         if (e.target.id === 'fortify-overlay') confirmFortify();
     });
