@@ -21,6 +21,12 @@ labelG.id = 'label-group';
 labelG.setAttribute('transform', layer4.getAttribute('transform') ?? '');
 svg.appendChild(labelG);
 
+const attackFxG = document.createElementNS(SVG_NS, 'g');
+attackFxG.id = 'attack-fx-group';
+attackFxG.setAttribute('transform', layer4.getAttribute('transform') ?? '');
+attackFxG.style.pointerEvents = 'none';
+svg.appendChild(attackFxG);
+
 for (const id of COUNTRIES) {
     const path = svg.getElementById(id);
     if (!path) continue;
@@ -87,6 +93,77 @@ export function highlightLabel(id) {
         lbl.classList.remove('reinforced');
         delete highlightTimeouts[id];
     }, 10000);
+}
+
+function ensureAttackArrowMarker() {
+    let defs = svg.querySelector('defs');
+    if (!defs) {
+        defs = document.createElementNS(SVG_NS, 'defs');
+        svg.insertBefore(defs, svg.firstChild);
+    }
+
+    if (svg.getElementById('attack-arrow-head')) return;
+
+    const marker = document.createElementNS(SVG_NS, 'marker');
+    marker.id = 'attack-arrow-head';
+    marker.setAttribute('viewBox', '0 0 12 12');
+    marker.setAttribute('refX', '10');
+    marker.setAttribute('refY', '6');
+    marker.setAttribute('markerWidth', '12');
+    marker.setAttribute('markerHeight', '12');
+    marker.setAttribute('orient', 'auto-start-reverse');
+
+    const head = document.createElementNS(SVG_NS, 'path');
+    head.setAttribute('d', 'M1,1 L11,6 L1,11 L4,6 Z');
+    head.setAttribute('fill', '#ffffff');
+    marker.appendChild(head);
+    defs.appendChild(marker);
+}
+
+function getTerritoryCenter(id) {
+    const path = svg.getElementById(id);
+    if (!path) return null;
+    const box = path.getBBox();
+    return {
+        x: box.x + box.width / 2,
+        y: box.y + box.height / 2,
+    };
+}
+
+export function showAttackArrow(fromId, toId, color = '#ffffff') {
+    ensureAttackArrowMarker();
+    const from = getTerritoryCenter(fromId);
+    const to = getTerritoryCenter(toId);
+    if (!from || !to) return;
+
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const nx = -dy / dist;
+    const ny = dx / dist;
+    const bend = Math.min(70, Math.max(28, dist * 0.2));
+    const cx = (from.x + to.x) / 2 + nx * bend;
+    const cy = (from.y + to.y) / 2 + ny * bend;
+    const pathD = `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+
+    const glow = document.createElementNS(SVG_NS, 'path');
+    glow.setAttribute('d', pathD);
+    glow.setAttribute('class', 'attack-arrow-glow');
+    glow.setAttribute('stroke', color);
+
+    const arrow = document.createElementNS(SVG_NS, 'path');
+    arrow.setAttribute('d', pathD);
+    arrow.setAttribute('class', 'attack-arrow');
+    arrow.setAttribute('stroke', color);
+    arrow.setAttribute('marker-end', 'url(#attack-arrow-head)');
+
+    attackFxG.appendChild(glow);
+    attackFxG.appendChild(arrow);
+
+    setTimeout(() => {
+        glow.remove();
+        arrow.remove();
+    }, 700);
 }
 
 export function hexAlpha(hex, alpha) {

@@ -128,6 +128,39 @@ svg text.reinforced {
     to   { filter: brightness(1.5); }
 }
 
+#attack-fx-group {
+    pointer-events: none;
+}
+
+.attack-arrow-glow {
+    fill: none;
+    stroke-width: 14;
+    stroke-linecap: round;
+    opacity: 0.32;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.55));
+    animation: attack-arrow-fade 0.7s ease-out forwards;
+}
+
+.attack-arrow {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24 12;
+    stroke-dashoffset: 120;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.45));
+    animation: attack-arrow-dash 0.4s linear forwards, attack-arrow-fade 0.7s ease-out forwards;
+}
+
+@keyframes attack-arrow-dash {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes attack-arrow-fade {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
 /* Setup overlay */
 #setup-overlay {
     position: fixed; inset: 0;

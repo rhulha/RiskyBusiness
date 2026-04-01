@@ -1,6 +1,6 @@
 import { G, PLAYER_COLORS, INIT_ARMIES } from './state.js';
 import { COUNTRIES, COUNTRY_SET, ADJ, CONTINENTS } from './data.js';
-import { svg, renderAll, renderLabel, highlightLabel } from './map.js';
+import { svg, renderAll, renderLabel, highlightLabel, showAttackArrow } from './map.js';
 import { updateHeader, updateCursorOverlay, updateCardUI } from './ui.js';
 import { resolveBattle, doFortify, getConnectedOwn, connectedOwn, moveArmiesAfterCapture } from './combat.js';
 import { initAI, aiPlaceArmy, aiAttack, aiFortify } from './ai.js';
@@ -355,6 +355,7 @@ function onTerritoryClick(id) {
             if (t.armies >= 2) setSelected(id);
         } else {
             if (!ADJ[G.selected].includes(id)) return;
+            showAttackArrow(G.selected, id, G.players[G.turn].color);
             const result = resolveBattle(G.selected, id);
             renderAll();
             if (result.captured) {
