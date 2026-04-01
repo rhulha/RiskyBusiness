@@ -3,7 +3,7 @@ import { DISPLAY, COUNTRIES } from './data.js';
 
 const $ = id => document.getElementById(id);
 
-const soldierSrc = await fetch('../images/soldier.svg').then(r => r.text());
+const soldierSrc = await fetch('./images/soldier.svg').then(r => r.text());
 const soldierDoc = new DOMParser().parseFromString(soldierSrc, 'text/xml');
 const soldierPath = soldierDoc.querySelector('path');
 const soldierSvg = $('soldier-svg');
