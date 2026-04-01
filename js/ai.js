@@ -60,6 +60,7 @@ export function aiAttack() {
         return;
     }
 
+    gameCtx.showAttackArrow?.(bestAttacker, bestTarget, G.players[G.turn]?.color);
     const result = gameCtx.resolveBattle(bestAttacker, bestTarget);
     gameCtx.renderAll();
 

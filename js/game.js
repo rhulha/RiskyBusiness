@@ -151,6 +151,7 @@ function startGame(numPlayers, aiFlags = []) {
         setPhase,
         renderLabel,
         highlightLabel,
+        showAttackArrow,
         updateHeader,
         resolveBattle,
         renderAll,
