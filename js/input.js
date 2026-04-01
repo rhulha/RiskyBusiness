@@ -12,6 +12,9 @@ let setPhase = null;
 let showCaptureDialog = null;
 let showFortifyDialog = null;
 
+let holdingTerritory = null;
+let holdInterval = null;
+
 export function initInput(deps) {
     playSound = deps.playSound;
     renderLabel = deps.renderLabel;
@@ -21,6 +24,8 @@ export function initInput(deps) {
     showFortifyDialog = deps.showFortifyDialog;
 
     svg.addEventListener('click', onMapClick);
+    svg.addEventListener('mousedown', onMapMouseDown);
+    document.addEventListener('mouseup', onMouseUp);
     document.addEventListener('mousemove', onMouseMove);
 }
 
@@ -65,27 +70,57 @@ function onMapClick(e) {
     if (!G.phase || G.phase === 'gameover') return;
     let el = e.target;
     while (el && el !== svg) {
-        if (COUNTRY_SET.has(el.id)) { onTerritoryClick(el.id); return; }
+        if (COUNTRY_SET.has(el.id)) {
+            if (G.phase !== 'reinforce') onTerritoryClick(el.id);
+            return;
+        }
         el = el.parentElement;
     }
     if (G.phase === 'attack' || G.phase === 'fortify') setSelected(null);
 }
 
+function onMapMouseDown(e) {
+    if (G.phase !== 'reinforce') return;
+    let el = e.target;
+    while (el && el !== svg) {
+        if (COUNTRY_SET.has(el.id)) {
+            holdingTerritory = el.id;
+            holdInterval = setInterval(() => placeArmy(holdingTerritory), 80);
+            placeArmy(el.id);
+            return;
+        }
+        el = el.parentElement;
+    }
+}
+
+function onMouseUp() {
+    if (holdInterval) {
+        clearInterval(holdInterval);
+        holdInterval = null;
+    }
+    holdingTerritory = null;
+}
+
+function placeArmy(id) {
+    const t = G.territories[id];
+    if (t.owner !== G.turn || G.armiesToPlace <= 0) return;
+    t.armies++;
+    G.armiesToPlace--;
+    playSound('dip-sound');
+    renderLabel(id);
+    highlightLabel(id);
+    updateHeader();
+    updateCursorOverlay(lastMouseX, lastMouseY);
+    if (G.armiesToPlace === 0) {
+        if (holdInterval) clearInterval(holdInterval);
+        holdInterval = null;
+        holdingTerritory = null;
+        setTimeout(() => setPhase('attack'), 250);
+    }
+}
+
 function onTerritoryClick(id) {
     const t = G.territories[id];
-
-    if (G.phase === 'reinforce') {
-        if (t.owner !== G.turn || G.armiesToPlace <= 0) return;
-        t.armies++;
-        G.armiesToPlace--;
-        playSound('dip-sound');
-        renderLabel(id);
-        highlightLabel(id);
-        updateHeader();
-        updateCursorOverlay(lastMouseX, lastMouseY);
-        if (G.armiesToPlace === 0) setTimeout(() => setPhase('attack'), 250);
-        return;
-    }
 
     if (G.phase === 'attack') {
         if (!G.selected) {
