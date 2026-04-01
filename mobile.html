@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Risk - Mobile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><style>.d1{fill:%231a1a2e}.d2{fill:%23e74c3c}.d3{fill:%233498db}.d4{fill:%232ecc71}</style></defs><rect class='d1' width='100' height='100'/><g transform='translate(50,50)'><path class='d2' d='M-28,-28 L28,-28 L28,0 L-28,0 Z' stroke='%23fff' stroke-width='2'/><path class='d3' d='M-28,0 L0,0 L0,28 L-28,28 Z' stroke='%23fff' stroke-width='2'/><path class='d4' d='M0,0 L28,0 L28,28 L0,28 Z' stroke='%23fff' stroke-width='2'/><circle cx='-14' cy='-14' r='3' fill='%23fff'/><circle cx='7' cy='-14' r='3' fill='%23fff'/><circle cx='21' cy='-14' r='3' fill='%23fff'/><circle cx='-14' cy='14' r='3' fill='%23fff'/><circle cx='7' cy='14' r='3' fill='%23fff'/><circle cx='21' cy='14' r='3' fill='%23fff'/></g></svg>">
+</head>
+<body>
+
+<div id="setup-overlay">
+    <div id="setup-box">
+        <h1>RISK</h1>
+        <div id="setup-step1">
+            <p>How many players?</p>
+            <div id="player-btns"></div>
+        </div>
+        <div id="setup-step2" style="display:none">
+            <p>Configure players:</p>
+            <div id="player-config"></div>
+            <button id="start-btn">Start Game</button>
+        </div>
+    </div>
+</div>
+
+<div id="dice-overlay">
+    <div id="dice-box">
+        <div id="dice-title"></div>
+        <div id="dice-vs">
+            <div class="dice-side">
+                <h4 id="atk-name">Attacker</h4>
+                <div class="dice-rolls" id="atk-dice"></div>
+            </div>
+            <div class="dice-side">
+                <h4 id="def-name">Defender</h4>
+                <div class="dice-rolls" id="def-dice"></div>
+            </div>
+        </div>
+        <div id="dice-result"></div>
+    </div>
+</div>
+
+<div id="win-banner">
+    <div id="win-box">
+        <h2>WORLD DOMINATION</h2>
+        <h1 id="win-name"></h1>
+        <p>has conquered the world!</p>
+    </div>
+</div>
+
+<div id="capture-overlay" style="display:none">
+    <div id="capture-box">
+        <h3>Territory Captured!</h3>
+        <p id="capture-msg"></p>
+        <div id="army-slider-container">
+            <label for="army-slider">Armies to move:</label>
+            <input type="range" id="army-slider" min="1" max="6" value="3">
+            <span id="army-value">3</span>
+        </div>
+        <button id="capture-confirm-btn">Confirm</button>
+    </div>
+</div>
+
+<div id="fortify-overlay" style="display:none">
+    <div id="fortify-box">
+        <h3>Fortify Territory</h3>
+        <p id="fortify-msg"></p>
+        <div id="fortify-slider-container">
+            <label for="fortify-slider">Armies to move:</label>
+            <input type="range" id="fortify-slider" min="1" max="6" value="6">
+            <span id="fortify-value">6</span>
+        </div>
+        <button id="fortify-confirm-btn">Confirm</button>
+    </div>
+</div>
+
+<div id="mobile-sidebar">
+    <div id="player-info">
+        <div id="player-dot"></div>
+        <div id="phase-label"></div>
+    </div>
+    <div id="player-status" style="display:none"></div>
+    <div id="stats-panel">
+        <div class="stat-item">
+            <span class="stat-label">Armies</span>
+            <span id="armies-badge" class="stat-value">0</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Cards</span>
+            <span id="cards-badge" class="stat-value">0</span>
+        </div>
+    </div>
+    <div id="action-hint"></div>
+    <div id="action-buttons">
+        <button id="trade-btn" style="display:none">Trade Cards</button>
+        <button id="end-btn" disabled>End Phase</button>
+    </div>
+    <div id="reinforce-panel" style="display:none">
+        <div id="reinforce-info"></div>
+        <button id="place-army-btn" class="large-btn">Place Army</button>
+    </div>
+</div>
+
+<div id="map-wrap">
+    <div id="svgContainer"></div>
+</div>
+
+<div id="combat-log"></div>
+
+<audio id="boom-sound" preload="auto">
+    <source src="audio/boom.wav" type="audio/wav">
+</audio>
+
+<audio id="dip-sound" preload="auto">
+    <source src="audio/dip.wav" type="audio/wav">
+</audio>
+
+<audio id="hit-sound" preload="auto">
+    <source src="audio/hit.wav" type="audio/wav">
+</audio>
+
+<script type="module" src="js/mobile-game.js"></script>
+</body>
+</html>

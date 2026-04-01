@@ -7,7 +7,7 @@ const soldierSrc = await fetch('./images/soldier.svg').then(r => r.text());
 const soldierDoc = new DOMParser().parseFromString(soldierSrc, 'text/xml');
 const soldierPath = soldierDoc.querySelector('path');
 const soldierSvg = $('soldier-svg');
-if (soldierPath) {
+if (soldierPath && soldierSvg) {
     const g = document.createElementNS(SVG_NS, 'g');
     g.appendChild(soldierPath.cloneNode(true));
     const origG = soldierDoc.querySelector('g[fill]');
@@ -49,6 +49,7 @@ export function updateHeader() {
 
 function updatePlayerStatus() {
     const statusEl = $('player-status');
+    if (!statusEl) return;
     const countryCounts = Array(G.players.length).fill(0);
     COUNTRIES.forEach(id => countryCounts[G.territories[id].owner]++);
 
