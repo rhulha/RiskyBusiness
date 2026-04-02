@@ -117,20 +117,37 @@ export function logCombat(fromId, toId, defOwner, aRolls, dRolls, aLoss, dLoss, 
 
     const atkColor = G.players[G.turn].color;
     const defColor = G.players[defOwner].color;
-    const atkDiceStr = aRolls.map(d => DIE_FACES[d-1]).join(' ');
-    const defDiceStr = dRolls.map(d => DIE_FACES[d-1]).join(' ');
+    const isMobile = document.getElementById('mobile-sidebar') && !document.body.classList.contains('sidebar-visible');
 
-    let html = `<span style="color: ${atkColor}; font-weight: bold;">${DISPLAY[fromId]}</span> `;
-    html += `→ <span style="color: ${defColor}; font-weight: bold;">${DISPLAY[toId]}</span><br>`;
-    html += `Att: <span class="dice">${atkDiceStr}</span> vs Def: <span class="dice">${defDiceStr}</span><br>`;
-
-    if (captured) {
-        html += `<span style="color: #2ecc71; font-weight: bold;">⚔ Territory captured!</span>`;
+    let html;
+    if (isMobile) {
+        const atkDiceStr = aRolls.join(',');
+        const defDiceStr = dRolls.join(',');
+        html = `${DISPLAY[fromId]} vs ${DISPLAY[toId]}<br>`;
+        html += `[${atkDiceStr}] vs [${defDiceStr}]`;
+        if (captured) {
+            html += `<br>CAPTURED`;
+        } else {
+            const parts = [];
+            if (aLoss) parts.push(`A−${aLoss}`);
+            if (dLoss) parts.push(`D−${dLoss}`);
+            if (parts.length) html += `<br>${parts.join(' ')}`;
+        }
     } else {
-        const parts = [];
-        if (aLoss) parts.push(`Attacker −${aLoss}`);
-        if (dLoss) parts.push(`Defender −${dLoss}`);
-        html += parts.join(' · ');
+        const atkDiceStr = aRolls.map(d => DIE_FACES[d-1]).join(' ');
+        const defDiceStr = dRolls.map(d => DIE_FACES[d-1]).join(' ');
+        html = `<span style="color: ${atkColor}; font-weight: bold;">${DISPLAY[fromId]}</span> `;
+        html += `→ <span style="color: ${defColor}; font-weight: bold;">${DISPLAY[toId]}</span><br>`;
+        html += `Att: <span class="dice">${atkDiceStr}</span> vs Def: <span class="dice">${defDiceStr}</span><br>`;
+
+        if (captured) {
+            html += `<span style="color: #2ecc71; font-weight: bold;">⚔ Territory captured!</span>`;
+        } else {
+            const parts = [];
+            if (aLoss) parts.push(`Attacker −${aLoss}`);
+            if (dLoss) parts.push(`Defender −${dLoss}`);
+            html += parts.join(' · ');
+        }
     }
 
     entry.innerHTML = html;

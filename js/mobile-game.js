@@ -57,6 +57,17 @@ $('trade-btn')?.addEventListener('click', () => {
     }
 });
 
+const toggleBtn = $('toggle-sidebar-btn');
+if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('sidebar-visible');
+    });
+    toggleBtn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        document.body.classList.toggle('sidebar-visible');
+    });
+}
+
 function updateMobileSidebar() {
     if (!G.phase || !G.players || !G.players[G.turn]) return;
     if (G.phase === 'gameover') return;
@@ -68,6 +79,7 @@ function updateMobileSidebar() {
     const actionHint = $('action-hint');
     const tradeBtn = $('trade-btn');
     const endBtn = $('end-btn');
+    const actionButtons = $('action-buttons');
 
     const phaseText = {
         reinforce: 'REINFORCE',
@@ -93,13 +105,18 @@ function updateMobileSidebar() {
     }
     if (actionHint) actionHint.textContent = hint;
 
+    const isAITurn = player.ai;
+    if (actionButtons) {
+        actionButtons.style.display = isAITurn ? 'none' : 'flex';
+    }
+
     if (endBtn) {
         endBtn.disabled = G.phase === 'reinforce' && G.armiesToPlace > 0;
         endBtn.textContent = G.phase === 'attack' ? 'End Attack' : G.phase === 'fortify' ? 'End Fortify' : 'End Phase';
     }
 
     if (tradeBtn) {
-        tradeBtn.style.display = findValidCardSet(G.cards[G.turn] || []) ? 'block' : 'none';
+        tradeBtn.style.display = !isAITurn && findValidCardSet(G.cards[G.turn] || []) ? 'block' : 'none';
     }
 }
 
