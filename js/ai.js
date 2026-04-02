@@ -4,6 +4,8 @@ import { moveArmiesAfterCapture } from './combat.js';
 
 let gameCtx = {};
 const AI_ATTACK_ARROW_DELAY_MS = 140;
+const AI_MAX_DEFICIT_FOR_NORMAL_ATTACK = -2;
+const AI_MAX_DEFICIT_FOR_HIGH_VALUE_CONTINENT_ATTACK = -3;
 
 const CONTINENT_INDEX_BY_TERRITORY = new Map();
 for (let i = 0; i < CONTINENTS.length; i++) {
@@ -55,6 +57,12 @@ function getContinentPriorityBonus(toId, attackerOwner, defenderOwner, continent
     return bonus;
 }
 
+function getRiskPenalty(armyDelta) {
+    if (armyDelta >= 0) return 0;
+    const deficit = -armyDelta;
+    return 18 + deficit * deficit * 20;
+}
+
 export function initAI(context) {
     gameCtx = context;
 }
@@ -98,9 +106,18 @@ export function aiAttack() {
             const to = G.territories[toId];
             if (to.owner === G.turn) continue;
 
-            const score =
-                (from.armies - to.armies) +
-                getContinentPriorityBonus(toId, from.owner, to.owner, continentStats);
+            const armyDelta = from.armies - to.armies;
+            const continentBonus = getContinentPriorityBonus(toId, from.owner, to.owner, continentStats);
+
+            if (armyDelta <= AI_MAX_DEFICIT_FOR_HIGH_VALUE_CONTINENT_ATTACK && continentBonus < 160) {
+                continue;
+            }
+
+            if (armyDelta <= AI_MAX_DEFICIT_FOR_NORMAL_ATTACK && continentBonus < 95) {
+                continue;
+            }
+
+            const score = armyDelta + continentBonus - getRiskPenalty(armyDelta);
             if (score > bestScore) {
                 bestScore = score;
                 bestAttacker = fromId;
