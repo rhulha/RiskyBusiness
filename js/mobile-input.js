@@ -116,7 +116,7 @@ function onTerritoryClick(id) {
             if (result.captured) {
                 playSound('boom-sound');
                 const minArmies = Math.max(1, result.atkDice - result.aLoss);
-                const maxArmies = G.territories[G.selected].armies;
+                const maxArmies = Math.max(1, G.territories[G.selected].armies - 1);
                 const attackerId = G.selected;
                 setSelected(null);
                 showCaptureDialog(attackerId, id, minArmies, maxArmies);

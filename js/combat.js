@@ -77,7 +77,8 @@ export function connectedOwn(fromId, toId) {
 export function moveArmiesAfterCapture(fromId, toId, movingArmies) {
     const from = G.territories[fromId];
     const to = G.territories[toId];
-    from.armies -= movingArmies;
-    to.armies += movingArmies;
-    if (from.armies < 1) from.armies = 1;
+    const maxMovable = Math.max(0, from.armies - 1);
+    const safeMove = Math.max(0, Math.min(maxMovable, movingArmies));
+    from.armies -= safeMove;
+    to.armies += safeMove;
 }
