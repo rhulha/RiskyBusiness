@@ -117,7 +117,7 @@ export function logCombat(fromId, toId, defOwner, aRolls, dRolls, aLoss, dLoss, 
 
     const atkColor = G.players[G.turn].color;
     const defColor = G.players[defOwner].color;
-    const isMobile = document.getElementById('mobile-sidebar') && !document.body.classList.contains('sidebar-visible');
+    const isMobile = !!document.getElementById('mobile-sidebar');
 
     let html;
     if (isMobile) {

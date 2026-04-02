@@ -73,7 +73,7 @@ function updateMobileSidebar() {
     if (G.phase === 'gameover') return;
 
     const player = G.players[G.turn];
-    const phaseLabel = $('phase-label');
+    const phaseLabel = document.querySelector('#top-center-corner #phase-label');
     const armiesDisplay = $('armies-display');
     const cardsDisplay = $('cards-display');
     const actionHint = $('action-hint');
