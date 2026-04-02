@@ -1,9 +1,59 @@
 import { G } from './state.js';
-import { COUNTRIES, ADJ } from './data.js';
+import { COUNTRIES, ADJ, CONTINENTS } from './data.js';
 import { moveArmiesAfterCapture } from './combat.js';
 
 let gameCtx = {};
 const AI_ATTACK_ARROW_DELAY_MS = 140;
+
+const CONTINENT_INDEX_BY_TERRITORY = new Map();
+for (let i = 0; i < CONTINENTS.length; i++) {
+    for (const territoryId of CONTINENTS[i].territories) {
+        const indices = CONTINENT_INDEX_BY_TERRITORY.get(territoryId) ?? [];
+        indices.push(i);
+        CONTINENT_INDEX_BY_TERRITORY.set(territoryId, indices);
+    }
+}
+
+function buildContinentStats() {
+    return CONTINENTS.map(continent => {
+        const byOwner = new Map();
+        for (const id of continent.territories) {
+            const owner = G.territories[id]?.owner;
+            byOwner.set(owner, (byOwner.get(owner) ?? 0) + 1);
+        }
+        return {
+            total: continent.territories.length,
+            bonus: continent.bonus,
+            byOwner,
+        };
+    });
+}
+
+function getContinentPriorityBonus(toId, attackerOwner, defenderOwner, continentStats) {
+    let bonus = 0;
+    const continentIndices = CONTINENT_INDEX_BY_TERRITORY.get(toId) ?? [];
+
+    for (const idx of continentIndices) {
+        const stats = continentStats[idx];
+        const enemyCount = stats.byOwner.get(defenderOwner) ?? 0;
+        const myCount = stats.byOwner.get(attackerOwner) ?? 0;
+
+        if (enemyCount === stats.total) {
+            bonus += 140 + stats.bonus * 10;
+            continue;
+        }
+
+        if (enemyCount === stats.total - 1) {
+            bonus += 80 + stats.bonus * 8;
+        }
+
+        if (myCount === stats.total - 1) {
+            bonus += 110 + stats.bonus * 9;
+        }
+    }
+
+    return bonus;
+}
 
 export function initAI(context) {
     gameCtx = context;
@@ -38,6 +88,7 @@ export function aiAttack() {
     if (G.phase !== 'attack') return;
 
     let bestAttacker = null, bestTarget = null, bestScore = -Infinity;
+    const continentStats = buildContinentStats();
 
     for (const fromId of COUNTRIES) {
         const from = G.territories[fromId];
@@ -47,7 +98,9 @@ export function aiAttack() {
             const to = G.territories[toId];
             if (to.owner === G.turn) continue;
 
-            const score = from.armies - to.armies;
+            const score =
+                (from.armies - to.armies) +
+                getContinentPriorityBonus(toId, from.owner, to.owner, continentStats);
             if (score > bestScore) {
                 bestScore = score;
                 bestAttacker = fromId;
