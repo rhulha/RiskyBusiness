@@ -153,6 +153,7 @@ export function checkWin() {
         $('win-name').style.color  = p.color;
         $('win-banner').style.display = 'flex';
         $('end-btn').disabled = true;
+        playSound('didi-sound');
         return true;
     }
     return false;
