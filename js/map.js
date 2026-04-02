@@ -3,7 +3,7 @@ import { G, SVG_NS } from './state.js';
 
 const $ = id => document.getElementById(id);
 
-const resp = await fetch('./images/Risk_board.svg');
+const resp = await fetch('./images/board.svg');
 $('svgContainer').innerHTML = await resp.text();
 export const svg = $('svgContainer').querySelector('svg');
 const layer4 = svg.getElementById('layer4');
