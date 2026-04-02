@@ -21,25 +21,33 @@ if (soldierPath && soldierSvg) {
 export function updateHeader() {
     if (!G.phase) return;
     const p = G.players[G.turn];
-    $('player-dot').style.background = p.color;
+
+    const playerDot = $('player-dot');
+    if (playerDot) playerDot.style.background = p.color;
 
     const phases = {reinforce:'Reinforce', attack:'Attack', fortify:'Fortify', gameover:'Game Over'};
-    $('phase-label').textContent = `${p.name} — ${phases[G.phase]}`;
-    $('phase-label').style.color = p.color;
+    const phaseLabel = $('phase-label');
+    if (phaseLabel) {
+        phaseLabel.textContent = `${p.name} — ${phases[G.phase]}`;
+        phaseLabel.style.color = p.color;
+    }
+
+    const armiesBadge = $('armies-badge');
+    const actionHint = $('action-hint');
 
     if (G.phase === 'reinforce') {
-        $('armies-badge').textContent = G.armiesToPlace > 0 ? `+${G.armiesToPlace}` : '';
-        $('action-hint').textContent  = G.armiesToPlace > 0
+        if (armiesBadge) armiesBadge.textContent = G.armiesToPlace > 0 ? `+${G.armiesToPlace}` : '';
+        if (actionHint) actionHint.textContent = G.armiesToPlace > 0
             ? `Place ${G.armiesToPlace} arm${G.armiesToPlace === 1 ? 'y' : 'ies'} on your territories`
             : 'All armies placed…';
     } else if (G.phase === 'attack') {
-        $('armies-badge').textContent = '';
-        $('action-hint').textContent  = G.selected
+        if (armiesBadge) armiesBadge.textContent = '';
+        if (actionHint) actionHint.textContent = G.selected
             ? `Attacking from ${DISPLAY[G.selected]} — click a red territory`
             : 'Select your territory to attack from (2+ armies)';
     } else if (G.phase === 'fortify') {
-        $('armies-badge').textContent = '';
-        $('action-hint').textContent  = G.selected
+        if (armiesBadge) armiesBadge.textContent = '';
+        if (actionHint) actionHint.textContent = G.selected
             ? `Moving from ${DISPLAY[G.selected]} — click a blue connected territory`
             : 'Move armies to a connected friendly territory (optional)';
     }
@@ -66,7 +74,7 @@ export function updateCardUI() {
     const tradeBtn = $('trade-btn');
     const playerCards = G.cards[G.turn];
 
-    cardsBadge.textContent = playerCards.length > 0 ? `🃏 ${playerCards.length}` : '';
+    if (cardsBadge) cardsBadge.textContent = playerCards.length > 0 ? `🃏 ${playerCards.length}` : '';
 
     if (!tradeBtn) return;
 

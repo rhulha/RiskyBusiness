@@ -133,10 +133,14 @@ export function advanceTurn() {
 }
 
 export function calcReinforcements() {
-    const mine = COUNTRIES.filter(id => G.territories[id].owner === G.turn);
+    const mine = COUNTRIES.filter(id => G.territories[id]?.owner === G.turn);
+    if (mine.length === 0) {
+        const fallback = Object.values(G.territories).filter(t => t.owner === G.turn).length;
+        return Math.max(3, Math.floor(fallback / 3));
+    }
     let n = Math.max(3, Math.floor(mine.length / 3));
     for (const c of CONTINENTS) {
-        if (c.territories.every(id => G.territories[id].owner === G.turn)) n += c.bonus;
+        if (c.territories.every(id => G.territories[id]?.owner === G.turn)) n += c.bonus;
     }
     return n;
 }

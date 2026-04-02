@@ -1,0 +1,19 @@
+{
+  "name": "RiskyBusiness - World Domination",
+  "short_name": "RiskyBiz",
+  "description": "Strategic world conquest game",
+  "start_url": "/mobile.html",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#1a1a2e",
+  "theme_color": "#0f3460",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><defs><style>.d1{fill:%231a1a2e}.d2{fill:%23e74c3c}.d3{fill:%233498db}.d4{fill:%232ecc71}</style></defs><rect class='d1' width='192' height='192'/><g transform='translate(96,96)'><path class='d2' d='M-56,-56 L56,-56 L56,0 L-56,0 Z' stroke='%23fff' stroke-width='4'/><path class='d3' d='M-56,0 L0,0 L0,56 L-56,56 Z' stroke='%23fff' stroke-width='4'/><path class='d4' d='M0,0 L56,0 L56,56 L0,56 Z' stroke='%23fff' stroke-width='4'/></g></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -37,7 +37,7 @@ for (const id of COUNTRIES) {
     const circle = document.createElementNS(SVG_NS, 'circle');
     circle.id = `bg-${id}`;
     circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
-    circle.setAttribute('r', '11');
+    circle.setAttribute('r', '16.5');
     circle.setAttribute('stroke', 'rgba(0,0,0,0.6)');
     circle.setAttribute('stroke-width', '1.5');
     circle.style.pointerEvents = 'none';
@@ -48,7 +48,7 @@ for (const id of COUNTRIES) {
     txt.setAttribute('x', cx); txt.setAttribute('y', cy);
     txt.setAttribute('text-anchor', 'middle');
     txt.setAttribute('dominant-baseline', 'middle');
-    txt.setAttribute('font-size', '13');
+    txt.setAttribute('font-size', '19.5');
     txt.setAttribute('font-weight', 'bold');
     txt.setAttribute('fill', 'white');
     txt.setAttribute('stroke', 'rgba(0,0,0,0.5)');

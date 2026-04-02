@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Risk">
+    <link rel="manifest" href="manifest.json">
     <title>Risk - Mobile</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile.css">
@@ -76,23 +80,16 @@
     </div>
 </div>
 
-<div id="mobile-sidebar">
-    <div id="player-info">
-        <div id="player-dot"></div>
-        <div id="phase-label"></div>
-    </div>
-    <div id="player-status" style="display:none"></div>
-    <div id="stats-panel">
-        <div class="stat-item">
-            <span class="stat-label">Armies</span>
-            <span id="armies-badge" class="stat-value">0</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-label">Cards</span>
-            <span id="cards-badge" class="stat-value">0</span>
-        </div>
-    </div>
-    <div id="action-hint"></div>
+<div id="top-left-corner">
+    <div id="phase-label"></div>
+</div>
+
+<div id="top-right-corner">
+    <div id="armies-display"></div>
+    <div id="cards-display"></div>
+</div>
+
+<div id="bottom-left-corner">
     <div id="action-buttons">
         <button id="trade-btn" style="display:none">Trade Cards</button>
         <button id="end-btn" disabled>End Phase</button>
@@ -101,6 +98,10 @@
         <div id="reinforce-info"></div>
         <button id="place-army-btn" class="large-btn">Place Army</button>
     </div>
+</div>
+
+<div id="bottom-right-corner">
+    <div id="action-hint"></div>
 </div>
 
 <div id="map-wrap">

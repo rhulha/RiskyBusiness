@@ -62,25 +62,26 @@ function updateMobileSidebar() {
     if (G.phase === 'gameover') return;
 
     const player = G.players[G.turn];
-    const playerDot = $('player-dot');
     const phaseLabel = $('phase-label');
-    const armiesBadge = $('armies-badge');
-    const cardsBadge = $('cards-badge');
+    const armiesDisplay = $('armies-display');
+    const cardsDisplay = $('cards-display');
     const actionHint = $('action-hint');
     const tradeBtn = $('trade-btn');
     const endBtn = $('end-btn');
-
-    if (playerDot) playerDot.style.background = player.color;
 
     const phaseText = {
         reinforce: 'REINFORCE',
         attack: 'ATTACK',
         fortify: 'FORTIFY'
     }[G.phase] || '';
-    if (phaseLabel) phaseLabel.textContent = phaseText;
 
-    if (armiesBadge) armiesBadge.textContent = G.armiesToPlace || '0';
-    if (cardsBadge) cardsBadge.textContent = (G.cards[G.turn] || []).length;
+    if (phaseLabel) {
+        phaseLabel.textContent = phaseText;
+        phaseLabel.style.color = player.color;
+    }
+
+    if (armiesDisplay) armiesDisplay.textContent = `Armies: ${G.armiesToPlace || '0'}`;
+    if (cardsDisplay) cardsDisplay.textContent = `Cards: ${(G.cards[G.turn] || []).length}`;
 
     let hint = '';
     if (G.phase === 'reinforce') {

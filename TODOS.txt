@@ -1,7 +1,15 @@
+MOBILE VERSION: mobile.html - touch-based interface for widescreen/landscape only
+
+ai needs to prioritize to break continentes that are completely captured by the opponent, and to capture continents that are almost captured by them
+
+
+
 add login so we can have MMR and leaderboard
 and punish leavers
 
 also add networking and match making so we can play against other people online
 
 
+
+MOST IMPORTANT: DONT USE A FIXED TIMELIMIT PER TURN; INSTEAD USE A FIXED TIME PER ACTION WITH A TIME BANK
 

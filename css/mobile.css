@@ -8,114 +8,107 @@
 html {
     height: 100%;
     width: 100%;
+    height: 100dvh;
+    overflow: hidden;
 }
 
 body {
     display: grid !important;
-    grid-template-columns: 200px 1fr !important;
+    grid-template-columns: 1fr !important;
     grid-template-rows: 1fr !important;
     flex-direction: unset !important;
-    height: 100%;
+    height: 100dvh;
     width: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
-#mobile-sidebar {
-    grid-column: 1;
-    grid-row: 1;
-    background: #16213e;
-    border-right: 2px solid #0f3460;
+#top-left-corner {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: none;
+}
+
+#top-right-corner {
+    position: fixed;
+    top: max(6px, env(safe-area-inset-top));
+    right: max(6px, env(safe-area-inset-right));
+    z-index: 100;
+    text-align: right;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    padding: 12px;
-    gap: 16px;
-    width: 200px;
-    height: 100%;
-    min-width: 200px;
+    gap: 4px;
 }
 
-#player-info {
+#bottom-left-corner {
+    position: fixed;
+    bottom: max(6px, env(safe-area-inset-bottom));
+    left: max(6px, env(safe-area-inset-left));
+    z-index: 100;
+    pointer-events: auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 6px;
+    gap: 4px;
+    align-items: flex-start;
 }
 
-#player-dot {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid #fff;
+#bottom-right-corner {
+    position: fixed;
+    bottom: max(6px, env(safe-area-inset-bottom));
+    right: max(6px, env(safe-area-inset-right));
+    z-index: 100;
+    pointer-events: none;
+    text-align: right;
+    max-width: 160px;
 }
 
 #phase-label {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
+    letter-spacing: 0.5px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
-#stats-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.stat-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    font-size: 13px;
-}
-
-.stat-label {
-    color: #aaa;
-}
-
-.stat-value {
-    font-size: 18px;
+#armies-display,
+#cards-display {
+    font-size: 14px;
     font-weight: bold;
     color: #f1c40f;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
 #action-hint {
     font-size: 12px;
     color: #aaa;
-    text-align: center;
-    padding: 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
+    max-width: 150px;
+    line-height: 1.2;
 }
 
 #action-buttons {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 #action-buttons button {
-    padding: 12px;
-    border-radius: 6px;
+    padding: 8px 12px;
+    border-radius: 4px;
     border: none;
     color: #eee;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     touch-action: manipulation;
     transition: background 0.15s;
+    white-space: nowrap;
 }
 
 #trade-btn {
@@ -146,29 +139,27 @@ body {
 #reinforce-panel {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 6px;
+    gap: 6px;
 }
 
 #reinforce-info {
-    font-size: 13px;
+    font-size: 11px;
     color: #aaa;
-    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
 .large-btn {
-    padding: 16px;
-    border-radius: 6px;
+    padding: 8px 12px;
+    border-radius: 4px;
     border: none;
     background: #2ecc71;
     color: #1a1a2e;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     touch-action: manipulation;
     transition: background 0.15s;
+    white-space: nowrap;
 }
 
 .large-btn:active:not(:disabled) {
@@ -181,7 +172,7 @@ body {
 }
 
 #map-wrap {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 1;
     width: 100%;
     height: 100%;
@@ -195,6 +186,14 @@ body {
 #svgContainer {
     width: 100%;
     height: 100%;
+}
+
+#svgContainer svg {
+    width: 100%;
+    height: 100%;
+    transform: scaleX(1.5) scaleY(1.2);
+    transform-origin: center;
+    overflow: visible;
 }
 
 #cursor-overlay {
