@@ -40,15 +40,19 @@ export function initDialogs(checkWin, advanceTurn, setSelected) {
 }
 
 export function showCaptureDialog(fromId, toId, minArmies, maxArmies) {
-    G.pendingCapture = {fromId, toId, minArmies, maxArmies};
+    const from = G.territories[fromId];
+    const safeMaxArmies = Math.max(1, Math.min(maxArmies, from.armies - 1));
+    const safeMinArmies = Math.min(minArmies, safeMaxArmies);
+
+    G.pendingCapture = {fromId, toId, minArmies: safeMinArmies, maxArmies: safeMaxArmies};
 
     $('capture-msg').textContent = `Moving armies from ${fromId} to ${toId}`;
 
     const slider = $('army-slider');
-    slider.min = minArmies;
-    slider.max = maxArmies;
-    slider.value = maxArmies;
-    $('army-value').textContent = maxArmies;
+    slider.min = safeMinArmies;
+    slider.max = safeMaxArmies;
+    slider.value = safeMaxArmies;
+    $('army-value').textContent = safeMaxArmies;
 
     $('capture-overlay').style.display = 'flex';
     slider.focus();
@@ -72,15 +76,18 @@ export function confirmCapture() {
 }
 
 export function showFortifyDialog(fromId, toId, maxArmies) {
-    G.pendingFortify = {fromId, toId, maxArmies};
+    const from = G.territories[fromId];
+    const safeMaxArmies = Math.max(1, Math.min(maxArmies, from.armies - 1));
+
+    G.pendingFortify = {fromId, toId, maxArmies: safeMaxArmies};
 
     $('fortify-msg').textContent = `Moving armies from ${fromId} to ${toId}`;
 
     const slider = $('fortify-slider');
     slider.min = 1;
-    slider.max = maxArmies;
-    slider.value = maxArmies;
-    $('fortify-value').textContent = maxArmies;
+    slider.max = safeMaxArmies;
+    slider.value = safeMaxArmies;
+    $('fortify-value').textContent = safeMaxArmies;
 
     $('fortify-overlay').style.display = 'flex';
     slider.focus();
