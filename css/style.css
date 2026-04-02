@@ -307,7 +307,7 @@ svg text.reinforced {
 /* Capture dialog */
 #capture-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: transparent;
     display: none;
     justify-content: center; align-items: center;
     z-index: 150;
@@ -372,7 +372,7 @@ svg text.reinforced {
 /* Fortify dialog */
 #fortify-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: transparent;
     display: none;
     justify-content: center; align-items: center;
     z-index: 150;

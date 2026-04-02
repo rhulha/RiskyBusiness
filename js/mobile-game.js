@@ -2,7 +2,7 @@ import { G } from './state.js';
 import { initSetup } from './setup.js';
 import { initFlow, startGame, setPhase, advanceTurn, checkWin } from './flow.js';
 import { initDialogs, showCaptureDialog, showFortifyDialog } from './dialogs.js';
-import { initInput, setSelected, updateReinforceUI } from './mobile-input.js';
+import { initInput, setSelected } from './mobile-input.js';
 import { tradeCards, findValidCardSet } from './cards.js';
 import { renderLabel, highlightLabel } from './map.js';
 import { updateCardUI } from './ui.js';
@@ -86,7 +86,6 @@ function updateMobileSidebar() {
     let hint = '';
     if (G.phase === 'reinforce') {
         hint = 'Tap territory to place army';
-        updateReinforceUI();
     } else if (G.phase === 'attack') {
         hint = G.selected ? 'Tap enemy to attack' : 'Tap territory (2+ armies)';
     } else if (G.phase === 'fortify') {

@@ -1,7 +1,7 @@
 import { G } from './state.js';
 import { COUNTRY_SET, ADJ } from './data.js';
 import { svg, showAttackArrow, renderAll } from './map.js';
-import { updateHeader, updateCardUI } from './ui.js';
+import { updateHeader } from './ui.js';
 import { resolveBattle, connectedOwn, getConnectedOwn } from './combat.js';
 
 let playSound = null;
@@ -11,8 +11,6 @@ let setPhase = null;
 let showCaptureDialog = null;
 let showFortifyDialog = null;
 let updateMobileSidebar = null;
-
-let selectedTerritory = null;
 
 export function initInput(deps) {
     playSound = deps.playSound;
@@ -24,7 +22,6 @@ export function initInput(deps) {
     updateMobileSidebar = deps.updateMobileSidebar;
 
     svg.addEventListener('touchend', onMapTouchEnd);
-    document.getElementById('place-army-btn')?.addEventListener('click', onPlaceArmyClick);
 }
 
 export function setSelected(id) {
@@ -74,11 +71,7 @@ function onMapTouchEnd(e) {
 
     if (countryId) {
         if (G.phase === 'reinforce') {
-            const t = G.territories[countryId];
-            if (t.owner === G.turn) {
-                selectedTerritory = countryId;
-                updateReinforceUI();
-            }
+            placeArmy(countryId);
         } else {
             onTerritoryClick(countryId);
         }
@@ -157,12 +150,8 @@ function onTerritoryClick(id) {
 
 let placeArmyTimeout = null;
 
-function onPlaceArmyClick() {
-    if (G.phase !== 'reinforce' || G.armiesToPlace <= 0 || !selectedTerritory) return;
-
-    const id = selectedTerritory;
+function placeArmy(id) {
     const t = G.territories[id];
-
     if (t.owner !== G.turn || G.armiesToPlace <= 0) return;
 
     t.armies++;
@@ -171,7 +160,6 @@ function onPlaceArmyClick() {
     renderLabel(id);
     highlightLabel(id);
     updateHeader();
-    updateReinforceUI();
     updateMobileSidebar?.();
 
     if (G.armiesToPlace === 0) {
@@ -180,31 +168,3 @@ function onPlaceArmyClick() {
     }
 }
 
-export function updateReinforceUI() {
-    const reinforcePanel = document.getElementById('reinforce-panel');
-    const info = document.getElementById('reinforce-info');
-    const btn = document.getElementById('place-army-btn');
-
-    if (G.phase === 'reinforce') {
-        reinforcePanel.style.display = 'flex';
-        if (selectedTerritory) {
-            const t = G.territories[selectedTerritory];
-            info.textContent = `Armies left: ${G.armiesToPlace}`;
-        } else {
-            info.textContent = `Armies: ${G.armiesToPlace} - Tap territory`;
-        }
-        btn.disabled = !selectedTerritory || G.armiesToPlace <= 0;
-    } else {
-        reinforcePanel.style.display = 'none';
-        selectedTerritory = null;
-    }
-}
-
-export function setReinforceSelection(id) {
-    const info = document.getElementById('reinforce-info');
-    info.dataset.selected = id;
-    if (id) {
-        const t = G.territories[id];
-        info.textContent = `${t.name}: ${t.armies} armies`;
-    }
-}

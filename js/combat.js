@@ -78,6 +78,6 @@ export function moveArmiesAfterCapture(fromId, toId, movingArmies) {
     const from = G.territories[fromId];
     const to = G.territories[toId];
     from.armies -= movingArmies;
-    to.armies = movingArmies;
+    to.armies += movingArmies;
     if (from.armies < 1) from.armies = 1;
 }
